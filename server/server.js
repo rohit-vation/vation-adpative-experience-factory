@@ -199,6 +199,7 @@ export function createServer() {
   });
 }
 
+/*
 // Start only when run directly (so tests can import this file)
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   createServer().listen(PORT, () => {
@@ -210,3 +211,24 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
       : 'AI: off (no API key in .env), running in demo mode');
   });
 }
+*/
+
+const server = createServer();
+
+// Start locally only when run directly (so local 'npm start' and tests still work)
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  server.listen(PORT, () => {
+    const status = aiStatus();
+    console.log(`Adaptive Experience Factory: http://localhost:${PORT}`);
+    const ready = status.providers.filter((p) => p.configured);
+    console.log(ready.length
+      ? `AI ready: ${ready.map((p) => `${p.label} (${p.defaultModel})`).join(', ')}. Default: ${status.defaultProvider}`
+      : 'AI: off (no API key in .env), running in demo mode');
+  });
+}
+
+// Export the server listener request handler for Vercel's serverless environment
+export default (req, res) => {
+  server.emit('request', req, res);
+};
+
