@@ -1,0 +1,575 @@
+/*
+  Result screens, one section per workflow.
+    0. Shared result layout
+    1. Create component  (design preview + spec)
+    2. Map components    (component accordions, side-by-side code)
+    3. Audit experience  (score ring, categories, metrics, findings)
+    4. Migrate content   (rows)
+    5. Personalization   (variant cards)
+*/
+
+/* ---------- 0. Shared result layout ---------- */
+
+.res {
+  display: grid;
+  gap: 22px;
+}
+
+.res-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.res-head h3 {
+  font-size: 17px;
+  font-weight: 650;
+}
+
+.sumline {
+  color: var(--fg-muted);
+  font-size: 14px;
+}
+
+.sec {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+
+.sec-title {
+  color: var(--fg-muted);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+/* Warning above results the AI could only estimate */
+
+.notice {
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: var(--warn-soft);
+  color: var(--warn);
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+/* ---------- 1. Create component ---------- */
+
+.design {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  align-items: start;
+  gap: 16px;
+}
+
+.pv-frame {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.pv-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.vp {
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.vp button {
+  padding: 4px 11px;
+  border: 0;
+  background: var(--surface);
+  color: var(--fg-muted);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.vp button[aria-pressed="true"] {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.pv-canvas {
+  padding: 14px;
+  border-radius: 10px;
+  background: var(--surface-2);
+}
+
+/* The preview is a picture of the generated component, so it keeps its own fixed colors. */
+.pv-hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 250px;
+  overflow: hidden;
+  border-radius: 8px;
+  color: #fff;
+  background:
+    radial-gradient(120% 90% at 85% 10%, rgba(122, 162, 255, 0.85) 0%, rgba(122, 162, 255, 0) 55%),
+    linear-gradient(135deg, #101a38, #1d3a8a 60%, #2753cf);
+}
+
+.pv-hero::before {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 55%;
+  background: linear-gradient(to top, rgba(8, 12, 24, 0.7), rgba(8, 12, 24, 0));
+}
+
+.pv-body {
+  position: relative;
+  max-width: 30rem;
+  padding: 28px;
+}
+
+.pv-eyebrow {
+  margin-bottom: 12px;
+  font: 500 11px/1 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.pv-title {
+  margin-bottom: 10px;
+  font-size: clamp(1.45rem, 3vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.pv-text {
+  font-size: 14px;
+  opacity: 0.92;
+}
+
+.pv-cta {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 9px 16px;
+  border-radius: 6px;
+  background: #fff;
+  color: #0f1730;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.pv-frame[data-vp="mobile"] .pv-hero {
+  max-width: 340px;
+  min-height: 320px;
+  margin-inline: auto;
+}
+
+/* Design spec list */
+
+.spec {
+  display: grid;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.spec div {
+  display: grid;
+  gap: 1px;
+  padding: 9px 12px;
+  border-top: 1px solid var(--line);
+}
+
+.spec div:first-child {
+  border-top: 0;
+}
+
+.spec dt {
+  color: var(--fg-muted);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.spec dd {
+  margin: 0;
+  font-size: 13.5px;
+}
+
+/* ---------- 2. Map components ---------- */
+
+details.comp {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+details.comp > summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px;
+  list-style: none;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+details.comp > summary::-webkit-details-marker {
+  display: none;
+}
+
+details.comp > summary::before {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-right: 2px solid var(--fg-muted);
+  border-bottom: 2px solid var(--fg-muted);
+  transform: rotate(-45deg);
+  transition: transform 0.15s;
+}
+
+details.comp[open] > summary::before {
+  transform: rotate(45deg);
+}
+
+.comp-body {
+  display: grid;
+  gap: 16px;
+  padding: 0 16px 16px;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.split > div {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.split h4 {
+  font-size: 13px;
+  font-weight: 650;
+}
+
+/* ---------- 3. Audit experience ---------- */
+
+.audit-top {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 22px;
+}
+
+.ring {
+  position: relative;
+  width: 132px;
+  height: 132px;
+}
+
+.ring svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.ring .trk { stroke: var(--surface-2); }
+.ring .val { transition: stroke-dasharray 0.6s; }
+.ring.good .val { stroke: var(--good); }
+.ring.warn .val { stroke: var(--warn); }
+.ring.bad  .val { stroke: var(--bad); }
+
+.ring .num {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
+
+.ring .num b {
+  font-size: 32px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.ring .num span {
+  color: var(--fg-muted);
+  font-size: 12px;
+}
+
+.cats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 10px;
+}
+
+.cat {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.cat-h {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cat-h b {
+  font-size: 13.5px;
+}
+
+.cat-h .sc {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.sc.good { color: var(--good); }
+.sc.warn { color: var(--warn); }
+.sc.bad  { color: var(--bad); }
+
+.cat p {
+  color: var(--fg-muted);
+  font-size: 12.5px;
+}
+
+.bar {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--surface-2);
+}
+
+.bar i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--accent);
+}
+
+.bar i.good { background: var(--good); }
+.bar i.warn { background: var(--warn); }
+.bar i.bad  { background: var(--bad); }
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.metric {
+  display: grid;
+  gap: 3px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.metric .k {
+  color: var(--fg-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.metric .v {
+  font-size: 20px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.metric .t {
+  color: var(--fg-muted);
+  font-size: 12px;
+}
+
+.findings {
+  display: grid;
+  gap: 8px;
+}
+
+.finding {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.finding[hidden] {
+  display: none;
+}
+
+.finding-h {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.finding-h b {
+  font-size: 14px;
+}
+
+.finding .where {
+  color: var(--fg-muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.finding .fix {
+  font-size: 13.5px;
+}
+
+.finding .fix span {
+  font-weight: 650;
+}
+
+/* ---------- 4. Migrate content ---------- */
+
+.rows {
+  display: grid;
+  gap: 8px;
+}
+
+.row {
+  display: grid;
+  gap: 3px;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.row-h {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.row p {
+  color: var(--fg-muted);
+  font-size: 13.5px;
+}
+
+/* ---------- 5. Personalization blocks ---------- */
+
+.variants {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 12px;
+}
+
+.variant {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.variant.ctrl {
+  border-style: dashed;
+}
+
+.variant-h {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.variant-h b {
+  font-size: 14px;
+}
+
+/* Like .pv-hero, this is a picture of generated content and keeps fixed colors. */
+.vprev {
+  display: grid;
+  gap: 8px;
+  padding: 14px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #101a38, #2753cf);
+  color: #fff;
+}
+
+.vprev b {
+  font-size: 16px;
+  line-height: 1.2;
+}
+
+.vprev p {
+  font-size: 12.5px;
+  opacity: 0.9;
+}
+
+.vprev span {
+  justify-self: start;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background: #fff;
+  color: #0f1730;
+  font-size: 12.5px;
+  font-weight: 650;
+}
+
+.variant .rule {
+  color: var(--fg-muted);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  overflow-wrap: anywhere;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 900px) {
+  .design,
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .audit-top {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ring .val,
+  details.comp > summary::before {
+    transition: none;
+  }
+}

@@ -1,0 +1,419 @@
+/*
+  Reusable components used on several screens:
+  pills, form controls, buttons, tabs, code blocks, tables, chips, stat rows.
+*/
+
+/* ---------- Pills ---------- */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--fg);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.pill.accent  { background: var(--accent-soft); color: var(--accent); }
+.pill.good    { background: var(--good-soft);   color: var(--good); }
+.pill.warn    { background: var(--warn-soft);   color: var(--warn); }
+.pill.bad     { background: var(--bad-soft);    color: var(--bad); }
+.pill.neutral { background: var(--surface-2);   color: var(--fg-muted); }
+.pill.outline {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--fg-muted);
+}
+
+/* ---------- Form controls ---------- */
+
+.field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.field > label,
+.field > .lbl {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+input[type="text"],
+select,
+textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 9px 11px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--fg);
+}
+
+textarea {
+  min-height: 92px;
+  resize: vertical;
+  line-height: 1.45;
+}
+
+input[type="text"]:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 0;
+  border-color: var(--accent);
+}
+
+/* Two-option segmented control (radio buttons) */
+
+.seg {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.seg label {
+  position: relative;
+  padding: 8px 6px;
+  text-align: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--fg-muted);
+  cursor: pointer;
+}
+
+.seg input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.seg label:has(input:checked) {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.seg label:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+/* Checkbox list */
+
+.checks {
+  display: grid;
+  gap: 6px;
+}
+
+.checks label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.checks input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+}
+
+/* ---------- Buttons ---------- */
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 0;
+  border-radius: 8px;
+  background: var(--accent);
+  color: var(--accent-fg);
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.08);
+}
+
+.btn-primary[disabled] {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.form-error {
+  color: var(--bad);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.form-error[hidden] {
+  display: none;
+}
+
+/* ---------- Tabs ---------- */
+
+.tabs {
+  min-width: 0;
+}
+
+.tablist {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--line);
+  scrollbar-width: thin;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 12px;
+  border: 0;
+  background: none;
+  box-shadow: inset 0 -2px 0 transparent;
+  color: var(--fg-muted);
+  font-size: 13.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.tab:hover {
+  color: var(--fg);
+}
+
+.tab[aria-selected="true"] {
+  color: var(--fg);
+  box-shadow: inset 0 -2px 0 var(--accent);
+}
+
+.tabpanel {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  padding-top: 14px;
+}
+
+.tabpanel[hidden] {
+  display: none;
+}
+
+/* Tabs nested inside tabs (file names) get a lighter style */
+
+.tabs .tabs .tablist {
+  gap: 6px;
+  border-bottom: 0;
+}
+
+.tabs .tabs .tab {
+  padding: 5px 10px;
+  border-radius: 6px;
+  box-shadow: none;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.tabs .tabs .tab[aria-selected="true"] {
+  background: var(--surface-2);
+  box-shadow: none;
+}
+
+.tabs .tabs .tabpanel {
+  padding-top: 8px;
+}
+
+/* ---------- Code blocks ---------- */
+
+.code {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--code-line);
+  border-radius: 8px;
+  background: var(--code-bg);
+}
+
+.code figcaption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 10px 7px 12px;
+  border-bottom: 1px solid var(--code-line);
+  color: var(--fg-muted);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+}
+
+.code .fname {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.code .fmeta {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+}
+
+.code .copy {
+  padding: 2px 9px;
+  border: 1px solid var(--code-line);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--fg);
+  font-family: var(--font-ui);
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.code .copy:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.code pre {
+  max-height: 400px;
+  margin: 0;
+  padding: 12px;
+  overflow: auto;
+}
+
+.code code {
+  color: var(--code-fg);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  white-space: pre;
+}
+
+/* ---------- Tables ---------- */
+
+.tbl-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+th {
+  padding: 9px 12px;
+  background: var(--surface-2);
+  color: var(--fg-muted);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+td {
+  padding: 10px 12px;
+  border-top: 1px solid var(--line);
+  vertical-align: top;
+}
+
+td code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+th.num,
+td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Filter chips ---------- */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chip {
+  padding: 4px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--fg-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chip[aria-pressed="true"] {
+  border-color: transparent;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* ---------- Stat row and bullet notes (shared by several results) ---------- */
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 26px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.stats div {
+  display: grid;
+}
+
+.stats b {
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.stats span {
+  font-size: 12px;
+  color: var(--fg-muted);
+}
+
+.notes {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+  color: var(--fg-muted);
+  font-size: 14px;
+}
+
+.notes li::marker {
+  color: var(--accent);
+}

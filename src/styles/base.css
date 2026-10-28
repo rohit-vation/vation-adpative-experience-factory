@@ -1,0 +1,141 @@
+/* Reset, page shell and the app bar. */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4, p {
+  margin: 0;
+}
+
+h1, h2, h3 {
+  text-wrap: balance;
+}
+
+button, input, select, textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.ic {
+  display: block;
+  flex: none;
+}
+
+.muted {
+  color: var(--fg-muted);
+}
+
+.hint {
+  font-size: 12.5px;
+  color: var(--fg-muted);
+}
+
+/* Page shell */
+
+.shell {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding-block: 20px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+
+/* App bar */
+
+.appbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+}
+
+.logo {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.appbar-title {
+  flex: 1 1 240px;
+  min-width: 0;
+}
+
+.appbar-title h1 {
+  font-size: 19px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.appbar-title p {
+  font-size: 13px;
+  color: var(--fg-muted);
+}
+
+.appbar-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.demo-note {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 14px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  background: var(--surface-2);
+  color: var(--fg-muted);
+  font-size: 13px;
+}
+
+.demo-note .dot {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--warn);
+  transform: translateY(-1px);
+}
+
+.demo-note code {
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+/* Footer */
+
+.foot {
+  margin-top: 34px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-size: 12.5px;
+  color: var(--fg-muted);
+}
+
+@media (max-width: 640px) {
+  .appbar-tags {
+    width: 100%;
+  }
+}

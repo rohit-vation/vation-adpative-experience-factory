@@ -1,0 +1,185 @@
+/**
+ * The ONLY file that knows how to talk to Gemini.
+ * Everything else asks for text and gets text back, so swapping provider or API style
+ * means editing this file and nothing else.
+ *
+ *   callGemini({ system, prompt }) -> string (the model's JSON text)
+ *
+ * Settings (all optional except the key). Set them in .env:
+ *   GEMINI_API_KEY      your key from Google AI Studio
+ *   GEMINI_MODEL        model name, default below. Use the name shown in AI Studio.
+ *   GEMINI_API_STYLE    "generateContent" (default) or "interactions"
+ *   GEMINI_BASE_URL     default https://generativelanguage.googleapis.com/v1beta
+ *   GEMINI_TIMEOUT_MS   default 180000
+ *   GEMINI_FALLBACK_MODEL  optional. Tried once if the main model stays overloaded (503) after retries.
+ *   GEMINI_RETRY_DELAY_MS  wait before the first retry, default 2000 (then 3 times longer each time)
+ *
+ * If one style answers 404, the other is tried once automatically. The "interactions"
+ * request and response shape follows Google's current docs, but has not been run against
+ * a live key from this project, so check the first real response.
+ */
+
+const DEFAULT_MODEL = 'gemini-3.8-flash';
+const DEFAULT_BASE = 'https://generativelanguage.googleapis.com/v1beta';
+const MAX_OUTPUT_TOKENS = 32768;
+
+export const geminiConfig = () => ({
+  key: process.env.GEMINI_API_KEY || '',
+  model: process.env.GEMINI_MODEL || DEFAULT_MODEL,
+  style: process.env.GEMINI_API_STYLE === 'interactions' ? 'interactions' : 'generateContent',
+  base: (process.env.GEMINI_BASE_URL || DEFAULT_BASE).replace(/\/$/, ''),
+  timeoutMs: Number(process.env.GEMINI_TIMEOUT_MS) || 180000,
+  fallbackModel: process.env.GEMINI_FALLBACK_MODEL || '',
+  retryDelayMs: process.env.GEMINI_RETRY_DELAY_MS !== undefined ? Number(process.env.GEMINI_RETRY_DELAY_MS) : 2000
+});
+
+/** An error whose message is safe to show in the browser. */
+export class AiError extends Error {
+  constructor(message, status = 502) {
+    super(message);
+    this.status = status;
+  }
+}
+
+/* ---------- The two request styles ---------- */
+
+const STYLES = {
+  generateContent: {
+    url: (c) => `${c.base}/models/${encodeURIComponent(c.model)}:generateContent`,
+    body: (c, system, prompt) => ({
+      systemInstruction: { parts: [{ text: system }] },
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      generationConfig: { responseMimeType: 'application/json', maxOutputTokens: MAX_OUTPUT_TOKENS }
+    }),
+    text: (json) => {
+      const parts = json?.candidates?.[0]?.content?.parts || [];
+      return parts.map((p) => p.text || '').join('');
+    },
+    blocked: (json) => json?.promptFeedback?.blockReason || ''
+  },
+
+  interactions: {
+    url: (c) => `${c.base}/interactions`,
+    body: (c, system, prompt) => ({
+      model: c.model,
+      system_instruction: system,
+      input: prompt,
+      response_format: { type: 'text', mime_type: 'application/json' },
+      generation_config: { max_output_tokens: MAX_OUTPUT_TOKENS }
+    }),
+    text: (json) => {
+      const steps = json?.steps || [];
+      const last = steps[steps.length - 1];
+      return (last?.content || []).map((c) => c.text || '').join('');
+    },
+    blocked: () => ''
+  }
+};
+
+/* ---------- One HTTP call ---------- */
+
+async function request(styleName, c, system, prompt) {
+  const style = STYLES[styleName];
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), c.timeoutMs);
+
+  let response;
+  try {
+    response = await fetch(style.url(c), {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-goog-api-key': c.key },
+      body: JSON.stringify(style.body(c, system, prompt)),
+      signal: controller.signal
+    });
+  } catch (err) {
+    if (err.name === 'AbortError') throw new AiError('Gemini took too long to answer. Try again.', 504);
+    throw new AiError('Could not reach Gemini. Check the network connection of the server.', 502);
+  } finally {
+    clearTimeout(timer);
+  }
+
+  const raw = await response.text();
+  let json = {};
+  try { json = JSON.parse(raw); } catch (err) { /* keep {} */ }
+
+  if (!response.ok) {
+    const detail = json?.error?.message || raw.slice(0, 200);
+    const e = new AiError(friendlyError(response.status, detail), response.status === 429 ? 429 : 502);
+    e.upstreamStatus = response.status;
+    throw e;
+  }
+
+  const blocked = style.blocked(json);
+  if (blocked) throw new AiError(`Gemini declined this request (${blocked}).`, 422);
+
+  const text = style.text(json);
+  if (!text.trim()) throw new AiError('Gemini returned an empty answer. Try again.', 502);
+  return text;
+}
+
+function friendlyError(status, detail) {
+  if (status === 400 && /api key/i.test(detail)) return 'Gemini rejected the API key. Check GEMINI_API_KEY in .env.';
+  if (status === 401 || status === 403) return 'Gemini refused the key. Check GEMINI_API_KEY and that the Gemini API is enabled for it.';
+  if (status === 404) return `Gemini does not know the model "${process.env.GEMINI_MODEL || DEFAULT_MODEL}". Set GEMINI_MODEL in .env to a model listed in Google AI Studio.`;
+  if (status === 429) return 'Gemini rate limit or quota reached. Wait a minute and try again.';
+  if (status === 503) return 'Gemini is overloaded right now (high demand on this model). It usually clears within a few minutes. Try again, or set GEMINI_MODEL / GEMINI_FALLBACK_MODEL in .env to another model.';
+  return `Gemini returned an error (${status}): ${detail.slice(0, 160)}`;
+}
+
+/* ---------- Public function ---------- */
+
+/** Errors that mean "Google is busy or had a hiccup". Trying again can work. */
+const RETRYABLE = [500, 502, 503, 504];
+const MAX_TRIES = 3;
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** One call for one model. If the API style is wrong for this key (404), the other style is tried once. */
+async function callOnce(c, system, prompt) {
+  try {
+    return await request(c.style, c, system, prompt);
+  } catch (err) {
+    if (err.upstreamStatus === 404) {
+      const other = c.style === 'generateContent' ? 'interactions' : 'generateContent';
+      try {
+        return await request(other, c, system, prompt);
+      } catch (second) {
+        throw err; // report the first error, it names the model
+      }
+    }
+    throw err;
+  }
+}
+
+/**
+ * Asks Gemini and returns the reply text.
+ * Busy errors (503 and similar) are retried up to MAX_TRIES times, waiting longer each time.
+ * If the model is still busy and GEMINI_FALLBACK_MODEL is set, that model gets one try.
+ * Other errors (bad key, quota, unknown model) are not retried.
+ */
+export async function callGemini({ system, prompt }) {
+  const c = geminiConfig();
+  if (!c.key) throw new AiError('GEMINI_API_KEY is not set.', 503);
+
+  let lastError;
+  for (let attempt = 1; attempt <= MAX_TRIES; attempt++) {
+    try {
+      return await callOnce(c, system, prompt);
+    } catch (err) {
+      lastError = err;
+      if (!RETRYABLE.includes(err.upstreamStatus) || attempt === MAX_TRIES) break;
+      const delay = c.retryDelayMs * 3 ** (attempt - 1);
+      console.warn(`Gemini busy (${err.upstreamStatus}) on ${c.model}, retrying in ${delay} ms (try ${attempt + 1} of ${MAX_TRIES})`);
+      await sleep(delay);
+    }
+  }
+
+  if (c.fallbackModel && c.fallbackModel !== c.model && RETRYABLE.includes(lastError.upstreamStatus)) {
+    console.warn(`${c.model} is still busy, trying fallback model ${c.fallbackModel}`);
+    try {
+      return await callOnce({ ...c, model: c.fallbackModel }, system, prompt);
+    } catch (err) {
+      lastError = err;
+    }
+  }
+  throw lastError;
+}

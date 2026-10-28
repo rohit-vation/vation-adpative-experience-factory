@@ -1,0 +1,36 @@
+/* Provider + model picker in the page header (src/ui/ai-picker.js). */
+
+.ai-picker {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-picker[hidden] { display: none; }
+
+.ai-pick {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+.ai-pick select,
+.ai-picker input[type="text"] {
+  width: auto;
+  max-width: 220px;
+  padding: 5px 8px;
+  font-size: 13px;
+}
+
+.ai-picker input[type="text"][hidden] { display: none; }
+
+@media (max-width: 640px) {
+  .ai-pick { flex: 1 1 140px; }
+  .ai-pick select { flex: 1; max-width: none; }
+  .ai-picker input[type="text"] { flex: 1 1 100%; max-width: none; }
+}
+.pill[hidden] { display: none; }

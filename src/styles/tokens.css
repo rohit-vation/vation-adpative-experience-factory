@@ -1,0 +1,99 @@
+/*
+  Design tokens.
+  Every color on the page comes from a variable defined here.
+  Light values live on :root. Dark values are applied in two cases:
+    1. the OS prefers dark and no explicit theme is set
+    2. an explicit data-theme="dark" is set on <html>
+*/
+
+:root {
+  /* Surfaces */
+  --bg: #f5f6f9;
+  --surface: #ffffff;
+  --surface-2: #eceef3;
+  --line: #d9dce5;
+
+  /* Text */
+  --fg: #12151d;
+  --fg-muted: #596072;
+
+  /* Brand accent */
+  --accent: #2753cf;
+  --accent-fg: #ffffff;
+  --accent-soft: #e4ebfb;
+
+  /* Status colors (kept separate from the accent) */
+  --good: #17784a;
+  --good-soft: #dcf2e6;
+  --warn: #8f5b00;
+  --warn-soft: #fbeed0;
+  --bad: #b7332a;
+  --bad-soft: #fbe2de;
+
+  /* Code blocks */
+  --code-bg: #f0f2f7;
+  --code-fg: #1a2030;
+  --code-line: #dfe2ea;
+
+  /* Type */
+  --font-ui: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #07090d;
+    --surface: #0e1117;
+    --surface-2: #151a23;
+    --line: #232a37;
+
+    --fg: #eceff5;
+    --fg-muted: #98a1b3;
+
+    --accent: #7aa2ff;
+    --accent-fg: #07090d;
+    --accent-soft: #14213f;
+
+    --good: #4cc38a;
+    --good-soft: #0f2a1d;
+    --warn: #e5b04a;
+    --warn-soft: #2e2410;
+    --bad: #ff7b6b;
+    --bad-soft: #321512;
+
+    --code-bg: #0a0d13;
+    --code-fg: #cfd6e4;
+    --code-line: #1f2633;
+
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --bg: #07090d;
+  --surface: #0e1117;
+  --surface-2: #151a23;
+  --line: #232a37;
+
+  --fg: #eceff5;
+  --fg-muted: #98a1b3;
+
+  --accent: #7aa2ff;
+  --accent-fg: #07090d;
+  --accent-soft: #14213f;
+
+  --good: #4cc38a;
+  --good-soft: #0f2a1d;
+  --warn: #e5b04a;
+  --warn-soft: #2e2410;
+  --bad: #ff7b6b;
+  --bad-soft: #321512;
+
+  --code-bg: #0a0d13;
+  --code-fg: #cfd6e4;
+  --code-line: #1f2633;
+
+  color-scheme: dark;
+}

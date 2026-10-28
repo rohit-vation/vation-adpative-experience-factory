@@ -1,0 +1,169 @@
+/*
+  Workflow screen layout: heading, input rail on the left, result canvas on the right.
+  Also the empty and loading states of the result canvas.
+*/
+
+.wf-top {
+  display: grid;
+  gap: 10px;
+  padding-top: 22px;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  padding: 4px 6px 4px 0;
+  border: 0;
+  background: none;
+  color: var(--fg-muted);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.back:hover {
+  color: var(--accent);
+}
+
+.wf-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wf-title .ci {
+  color: var(--accent);
+}
+
+.wf-title h2 {
+  font-size: 22px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.wf-lead {
+  max-width: 70ch;
+  color: var(--fg-muted);
+}
+
+.wf-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+  align-items: start;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+/* Input rail */
+
+.panel {
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.rail {
+  position: sticky;
+  top: 12px;
+}
+
+.rail form {
+  display: grid;
+  gap: 16px;
+}
+
+.rail h3 {
+  color: var(--fg-muted);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Result canvas */
+
+#result {
+  min-width: 0;
+  outline: none;
+}
+
+.empty {
+  display: grid;
+  gap: 12px;
+  padding: 22px;
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+}
+
+.empty h3 {
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.empty ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.empty li {
+  display: flex;
+  gap: 10px;
+  color: var(--fg-muted);
+  font-size: 14px;
+}
+
+.empty li::before {
+  content: "";
+  flex: none;
+  width: 6px;
+  height: 6px;
+  margin-top: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 28px 22px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.spin {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border: 2.5px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 900px) {
+  .wf-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .rail {
+    position: static;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spin {
+    animation-duration: 2.4s;
+  }
+}

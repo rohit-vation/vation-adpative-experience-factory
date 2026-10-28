@@ -1,0 +1,82 @@
+/* Home dashboard: the five workflow cards. */
+
+.home {
+  padding-top: 28px;
+}
+
+.home-q {
+  margin-bottom: 14px;
+  font-size: 17px;
+  font-weight: 650;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.card-action {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding: 18px 18px 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.card-action:hover {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent-soft) 35%, var(--surface));
+}
+
+.card-action .ci {
+  margin-bottom: 8px;
+  color: var(--accent);
+}
+
+.card-action .ct {
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.card-action .cd {
+  color: var(--fg-muted);
+  font-size: 14px;
+}
+
+/* "Inputs: ... Output: ..." line at the bottom of each card */
+.card-action .cm {
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line);
+  color: var(--fg-muted);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+}
+
+.platforms {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 26px;
+  color: var(--fg-muted);
+  font-size: 13px;
+}
+
+@media (max-width: 640px) {
+  .cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-action {
+    transition: none;
+  }
+}
