@@ -1,0 +1,14 @@
+{
+  "name": "adaptive-experience-factory",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Demo workspace for building, mapping, auditing, migrating and personalizing CMS experiences.",
+  "type": "module",
+  "scripts": {
+    "start": "node server/server.js",
+    "start:static": "node scripts/serve.js",
+    "test": "node scripts/smoke-test.js && node scripts/ai-test.js",
+    "mock": "node scripts/mock-gemini.js"
+  },
+  "engines": { "node": ">=18" }
+}

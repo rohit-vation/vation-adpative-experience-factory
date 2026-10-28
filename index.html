@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Adaptive Experience Factory</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+
+  <!-- Styles (order matters: tokens first) -->
+  <link rel="stylesheet" href="src/styles/tokens.css">
+  <link rel="stylesheet" href="src/styles/base.css">
+  <link rel="stylesheet" href="src/styles/components.css">
+  <link rel="stylesheet" href="src/styles/home.css">
+  <link rel="stylesheet" href="src/styles/workflow.css">
+  <link rel="stylesheet" href="src/styles/results.css">
+  <link rel="stylesheet" href="src/styles/ai-picker.css">
+</head>
+<body>
+  <div class="shell">
+    <header class="appbar">
+      <div class="logo" id="logo"></div>
+      <div class="appbar-title">
+        <h1>Adaptive Experience Factory</h1>
+        <p>Experience engineering workspace</p>
+      </div>
+      <div class="appbar-tags">
+        <div class="ai-picker" id="ai-picker" hidden></div>
+        <span class="pill outline" id="ai-pill" title="Whether results come from the AI or from sample data">Checking AI</span>
+        <span class="pill neutral">Prototype</span>
+      </div>
+    </header>
+
+    <p class="demo-note">
+      <span class="dot" id="note-dot" aria-hidden="true"></span>
+      <span id="note-text">Checking whether AI is connected.</span>
+    </p>
+
+    <!-- Home dashboard or the active workflow is rendered here by src/main.js -->
+    <main id="app"></main>
+
+    <footer class="foot">
+      To connect an AI, add a Gemini or OpenAI key to .env and restart. Steps are in README.md under "Connecting an AI".
+    </footer>
+  </div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
