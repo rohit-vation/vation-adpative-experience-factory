@@ -1,0 +1,42 @@
+[
+    {
+        "path":  "apps/scotia/components/content/faqCollection/.content.xml",
+        "content":  "\u003c?xml version=\"1.0\" encoding=\"UTF-8\"?\u003e\u003cjcr:root xmlns:jcr=\"http://www.jcp.org/jcr/1.0\" jcr:primaryType=\"cq:Component\" jcr:title=\"FAQ Collection\" componentGroup=\"special-components\"/\u003e",
+        "action":  "create"
+    },
+    {
+        "path":  "apps/scotia/components/content/faqCollection/_cq_dialog/.content.xml",
+        "content":  "",
+        "action":  "create"
+    },
+    {
+        "path":  "apps/scotia/components/content/faqCollection/faqCollection.html",
+        "content":  "",
+        "action":  "create"
+    },
+    {
+        "path":  "apps/scotia/components/content/faqCollection/clientlib/.content.xml",
+        "content":  "\u003c?xml version=\"1.0\" encoding=\"UTF-8\"?\u003e\u003cjcr:root xmlns:jcr=\"http://www.jcp.org/jcr/1.0\" jcr:primaryType=\"cq:ClientLibraryFolder\" categories=\"[faq.components.collection]\" allowProxy=\"{Boolean}true\"/\u003e",
+        "action":  "create"
+    },
+    {
+        "path":  "apps/scotia/components/content/faqCollection/clientlib/css.txt",
+        "content":  "faqCollection.css",
+        "action":  "create"
+    },
+    {
+        "path":  "apps/scotia/components/content/faqCollection/clientlib/js.txt",
+        "content":  "faqCollection.js",
+        "action":  "create"
+    },
+    {
+        "path":  "apps/scotia/components/content/faqCollection/clientlib/css/faqCollection.css",
+        "content":  "",
+        "action":  "create"
+    },
+    {
+        "path":  "apps/scotia/components/content/faqCollection/clientlib/js/faqCollection.js",
+        "content":  "",
+        "action":  "create"
+    }
+]

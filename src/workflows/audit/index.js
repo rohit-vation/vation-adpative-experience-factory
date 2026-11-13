@@ -8,12 +8,11 @@
 
 import { esc, $, $$ } from '../../lib/dom.js';
 import { val } from '../../ui/form.js';
-import { CHECKS } from './sample-data.js';
-import { demo } from './demo.js';
+import { CHECKS } from './checks.js';
 import { render, handleClick } from './render.js';
 
 const defaults = {
-  url: 'https://www.nokia.com',
+  url: 'https://example.com',
   component: 'Hero Banner'
 };
 
@@ -77,7 +76,6 @@ export default {
     return '';
   },
 
-  demo,
   render,
   onClick: handleClick,
 

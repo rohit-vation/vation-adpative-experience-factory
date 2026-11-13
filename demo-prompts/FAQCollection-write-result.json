@@ -1,0 +1,366 @@
+{
+    "ok":  false,
+    "mode":  "instance-only",
+    "summary":  {
+                    "totalOperations":  8,
+                    "succeeded":  0,
+                    "failed":  8,
+                    "initialFailures":  8,
+                    "retryAttempts":  15,
+                    "maxRetriesPerOperation":  5,
+                    "maxAttemptsPerOperation":  6
+                },
+    "retryPolicy":  {
+                        "behavior":  "Attempt every valid operation once, then retry retryable failures in rounds.",
+                        "maxRetries":  5,
+                        "maxAttempts":  6,
+                        "nonRetryableFailures":  "Validation errors, duplicate paths, access errors, redirects, and existing-file collisions are reported without retrying."
+                    },
+    "failed":  [
+                   {
+                       "index":  1,
+                       "type":  "file",
+                       "path":  "/apps/scotia/components/content/faqCollection/.content.xml",
+                       "phase":  "initial",
+                       "code":  "RESOURCE_ALREADY_EXISTS",
+                       "message":  "/apps/scotia/components/content/faqCollection/.content.xml already exists. Direct file overwrite is blocked. Prepare a fresh component path instead of overwriting an existing resource.",
+                       "httpStatus":  409,
+                       "attempts":  1,
+                       "retriesUsed":  0,
+                       "maxAttempts":  6,
+                       "retryable":  false,
+                       "history":  [
+                                       {
+                                           "attempt":  1,
+                                           "phase":  "initial",
+                                           "code":  "RESOURCE_ALREADY_EXISTS",
+                                           "httpStatus":  409,
+                                           "retryable":  false,
+                                           "message":  "/apps/scotia/components/content/faqCollection/.content.xml already exists. Direct file overwrite is blocked. Prepare a fresh component path instead of overwriting an existing resource."
+                                       }
+                                   ]
+                   },
+                   {
+                       "index":  2,
+                       "type":  "file",
+                       "path":  "/apps/scotia/components/content/faqCollection/_cq_dialog/.content.xml",
+                       "phase":  "initial",
+                       "code":  "RESOURCE_ALREADY_EXISTS",
+                       "message":  "/apps/scotia/components/content/faqCollection/_cq_dialog/.content.xml already exists. Direct file overwrite is blocked. Prepare a fresh component path instead of overwriting an existing resource.",
+                       "httpStatus":  409,
+                       "attempts":  1,
+                       "retriesUsed":  0,
+                       "maxAttempts":  6,
+                       "retryable":  false,
+                       "history":  [
+                                       {
+                                           "attempt":  1,
+                                           "phase":  "initial",
+                                           "code":  "RESOURCE_ALREADY_EXISTS",
+                                           "httpStatus":  409,
+                                           "retryable":  false,
+                                           "message":  "/apps/scotia/components/content/faqCollection/_cq_dialog/.content.xml already exists. Direct file overwrite is blocked. Prepare a fresh component path instead of overwriting an existing resource."
+                                       }
+                                   ]
+                   },
+                   {
+                       "index":  3,
+                       "type":  "file",
+                       "path":  "/apps/scotia/components/content/faqCollection/faqCollection.html",
+                       "phase":  "retry-5",
+                       "code":  "VERIFICATION_FAILED",
+                       "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/faqCollection.html could not be verified afterward.",
+                       "httpStatus":  null,
+                       "attempts":  6,
+                       "retriesUsed":  5,
+                       "maxAttempts":  6,
+                       "retryable":  true,
+                       "history":  [
+                                       {
+                                           "attempt":  1,
+                                           "phase":  "initial",
+                                           "code":  "VERIFICATION_FAILED",
+                                           "httpStatus":  null,
+                                           "retryable":  true,
+                                           "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/faqCollection.html could not be verified afterward."
+                                       },
+                                       {
+                                           "attempt":  2,
+                                           "phase":  "retry-1",
+                                           "code":  "VERIFICATION_FAILED",
+                                           "httpStatus":  null,
+                                           "retryable":  true,
+                                           "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/faqCollection.html could not be verified afterward."
+                                       },
+                                       {
+                                           "attempt":  3,
+                                           "phase":  "retry-2",
+                                           "code":  "VERIFICATION_FAILED",
+                                           "httpStatus":  null,
+                                           "retryable":  true,
+                                           "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/faqCollection.html could not be verified afterward."
+                                       },
+                                       {
+                                           "attempt":  4,
+                                           "phase":  "retry-3",
+                                           "code":  "VERIFICATION_FAILED",
+                                           "httpStatus":  null,
+                                           "retryable":  true,
+                                           "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/faqCollection.html could not be verified afterward."
+                                       },
+                                       {
+                                           "attempt":  5,
+                                           "phase":  "retry-4",
+                                           "code":  "VERIFICATION_FAILED",
+                                           "httpStatus":  null,
+                                           "retryable":  true,
+                                           "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/faqCollection.html could not be verified afterward."
+                                       },
+                                       {
+                                           "attempt":  6,
+                                           "phase":  "retry-5",
+                                           "code":  "VERIFICATION_FAILED",
+                                           "httpStatus":  null,
+                                           "retryable":  true,
+                                           "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/faqCollection.html could not be verified afterward."
+                                       }
+                                   ]
+                   },
+                   {
+                       "index":  4,
+                       "type":  "file",
+                       "path":  "/apps/scotia/components/content/faqCollection/clientlib/.content.xml",
+                       "phase":  "initial",
+                       "code":  "RESOURCE_ALREADY_EXISTS",
+                       "message":  "/apps/scotia/components/content/faqCollection/clientlib/.content.xml already exists. Direct file overwrite is blocked. Prepare a fresh component path instead of overwriting an existing resource.",
+                       "httpStatus":  409,
+                       "attempts":  1,
+                       "retriesUsed":  0,
+                       "maxAttempts":  6,
+                       "retryable":  false,
+                       "history":  [
+                                       {
+                                           "attempt":  1,
+                                           "phase":  "initial",
+                                           "code":  "RESOURCE_ALREADY_EXISTS",
+                                           "httpStatus":  409,
+                                           "retryable":  false,
+                                           "message":  "/apps/scotia/components/content/faqCollection/clientlib/.content.xml already exists. Direct file overwrite is blocked. Prepare a fresh component path instead of overwriting an existing resource."
+                                       }
+                                   ]
+                   },
+                   {
+                       "index":  5,
+                       "type":  "file",
+                       "path":  "/apps/scotia/components/content/faqCollection/clientlib/css.txt",
+                       "phase":  "initial",
+                       "code":  "RESOURCE_ALREADY_EXISTS",
+                       "message":  "/apps/scotia/components/content/faqCollection/clientlib/css.txt already exists. Direct file overwrite is blocked. Prepare a fresh component path instead of overwriting an existing resource.",
+                       "httpStatus":  409,
+                       "attempts":  1,
+                       "retriesUsed":  0,
+                       "maxAttempts":  6,
+                       "retryable":  false,
+                       "history":  [
+                                       {
+                                           "attempt":  1,
+                                           "phase":  "initial",
+                                           "code":  "RESOURCE_ALREADY_EXISTS",
+                                           "httpStatus":  409,
+                                           "retryable":  false,
+                                           "message":  "/apps/scotia/components/content/faqCollection/clientlib/css.txt already exists. Direct file overwrite is blocked. Prepare a fresh component path instead of overwriting an existing resource."
+                                       }
+                                   ]
+                   },
+                   {
+                       "index":  6,
+                       "type":  "file",
+                       "path":  "/apps/scotia/components/content/faqCollection/clientlib/js.txt",
+                       "phase":  "initial",
+                       "code":  "RESOURCE_ALREADY_EXISTS",
+                       "message":  "/apps/scotia/components/content/faqCollection/clientlib/js.txt already exists. Direct file overwrite is blocked. Prepare a fresh component path instead of overwriting an existing resource.",
+                       "httpStatus":  409,
+                       "attempts":  1,
+                       "retriesUsed":  0,
+                       "maxAttempts":  6,
+                       "retryable":  false,
+                       "history":  [
+                                       {
+                                           "attempt":  1,
+                                           "phase":  "initial",
+                                           "code":  "RESOURCE_ALREADY_EXISTS",
+                                           "httpStatus":  409,
+                                           "retryable":  false,
+                                           "message":  "/apps/scotia/components/content/faqCollection/clientlib/js.txt already exists. Direct file overwrite is blocked. Prepare a fresh component path instead of overwriting an existing resource."
+                                       }
+                                   ]
+                   },
+                   {
+                       "index":  7,
+                       "type":  "file",
+                       "path":  "/apps/scotia/components/content/faqCollection/clientlib/css/faqCollection.css",
+                       "phase":  "retry-5",
+                       "code":  "VERIFICATION_FAILED",
+                       "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/clientlib/css/faqCollection.css could not be verified afterward.",
+                       "httpStatus":  null,
+                       "attempts":  6,
+                       "retriesUsed":  5,
+                       "maxAttempts":  6,
+                       "retryable":  true,
+                       "history":  [
+                                       {
+                                           "attempt":  1,
+                                           "phase":  "initial",
+                                           "code":  "VERIFICATION_FAILED",
+                                           "httpStatus":  null,
+                                           "retryable":  true,
+                                           "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/clientlib/css/faqCollection.css could not be verified afterward."
+                                       },
+                                       {
+                                           "attempt":  2,
+                                           "phase":  "retry-1",
+                                           "code":  "VERIFICATION_FAILED",
+                                           "httpStatus":  null,
+                                           "retryable":  true,
+                                           "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/clientlib/css/faqCollection.css could not be verified afterward."
+                                       },
+                                       {
+                                           "attempt":  3,
+                                           "phase":  "retry-2",
+                                           "code":  "VERIFICATION_FAILED",
+                                           "httpStatus":  null,
+                                           "retryable":  true,
+                                           "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/clientlib/css/faqCollection.css could not be verified afterward."
+                                       },
+                                       {
+                                           "attempt":  4,
+                                           "phase":  "retry-3",
+                                           "code":  "VERIFICATION_FAILED",
+                                           "httpStatus":  null,
+                                           "retryable":  true,
+                                           "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/clientlib/css/faqCollection.css could not be verified afterward."
+                                       },
+                                       {
+                                           "attempt":  5,
+                                           "phase":  "retry-4",
+                                           "code":  "VERIFICATION_FAILED",
+                                           "httpStatus":  null,
+                                           "retryable":  true,
+                                           "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/clientlib/css/faqCollection.css could not be verified afterward."
+                                       },
+                                       {
+                                           "attempt":  6,
+                                           "phase":  "retry-5",
+                                           "code":  "VERIFICATION_FAILED",
+                                           "httpStatus":  null,
+                                           "retryable":  true,
+                                           "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/clientlib/css/faqCollection.css could not be verified afterward."
+                                       }
+                                   ]
+                   },
+                   {
+                       "index":  8,
+                       "type":  "file",
+                       "path":  "/apps/scotia/components/content/faqCollection/clientlib/js/faqCollection.js",
+                       "phase":  "retry-5",
+                       "code":  "VERIFICATION_FAILED",
+                       "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/clientlib/js/faqCollection.js could not be verified afterward.",
+                       "httpStatus":  null,
+                       "attempts":  6,
+                       "retriesUsed":  5,
+                       "maxAttempts":  6,
+                       "retryable":  true,
+                       "history":  [
+                                       {
+                                           "attempt":  1,
+                                           "phase":  "initial",
+                                           "code":  "VERIFICATION_FAILED",
+                                           "httpStatus":  null,
+                                           "retryable":  true,
+                                           "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/clientlib/js/faqCollection.js could not be verified afterward."
+                                       },
+                                       {
+                                           "attempt":  2,
+                                           "phase":  "retry-1",
+                                           "code":  "VERIFICATION_FAILED",
+                                           "httpStatus":  null,
+                                           "retryable":  true,
+                                           "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/clientlib/js/faqCollection.js could not be verified afterward."
+                                       },
+                                       {
+                                           "attempt":  3,
+                                           "phase":  "retry-2",
+                                           "code":  "VERIFICATION_FAILED",
+                                           "httpStatus":  null,
+                                           "retryable":  true,
+                                           "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/clientlib/js/faqCollection.js could not be verified afterward."
+                                       },
+                                       {
+                                           "attempt":  4,
+                                           "phase":  "retry-3",
+                                           "code":  "VERIFICATION_FAILED",
+                                           "httpStatus":  null,
+                                           "retryable":  true,
+                                           "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/clientlib/js/faqCollection.js could not be verified afterward."
+                                       },
+                                       {
+                                           "attempt":  5,
+                                           "phase":  "retry-4",
+                                           "code":  "VERIFICATION_FAILED",
+                                           "httpStatus":  null,
+                                           "retryable":  true,
+                                           "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/clientlib/js/faqCollection.js could not be verified afterward."
+                                       },
+                                       {
+                                           "attempt":  6,
+                                           "phase":  "retry-5",
+                                           "code":  "VERIFICATION_FAILED",
+                                           "httpStatus":  null,
+                                           "retryable":  true,
+                                           "message":  "AEM accepted the file upload, but /apps/scotia/components/content/faqCollection/clientlib/js/faqCollection.js could not be verified afterward."
+                                       }
+                                   ]
+                   }
+               ],
+    "retryRounds":  [
+                        {
+                            "round":  1,
+                            "attempted":  3,
+                            "recovered":  0,
+                            "remainingRetryable":  3,
+                            "delayMs":  200
+                        },
+                        {
+                            "round":  2,
+                            "attempted":  3,
+                            "recovered":  0,
+                            "remainingRetryable":  3,
+                            "delayMs":  400
+                        },
+                        {
+                            "round":  3,
+                            "attempted":  3,
+                            "recovered":  0,
+                            "remainingRetryable":  3,
+                            "delayMs":  800
+                        },
+                        {
+                            "round":  4,
+                            "attempted":  3,
+                            "recovered":  0,
+                            "remainingRetryable":  3,
+                            "delayMs":  1600
+                        },
+                        {
+                            "round":  5,
+                            "attempted":  3,
+                            "recovered":  0,
+                            "remainingRetryable":  3,
+                            "delayMs":  1600
+                        }
+                    ],
+    "applied":  [
+
+                ],
+    "note":  "The batch continued after individual failures. Successful writes remain in the repository and are not rolled back. Review each failed operation message, HTTP status, retry history, and path before manually retrying or repairing it."
+}

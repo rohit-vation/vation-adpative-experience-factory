@@ -1,0 +1,267 @@
+{
+    "data":  {
+                 "component":  {
+                                   "name":  "FAQ Collection",
+                                   "cms":  "aem",
+                                   "summary":  "An accessible, expandable FAQ collection component with single/multiple open behavior and rich text answers."
+                               },
+                 "design":  {
+                                "a11y":  [
+                                             "WAI-ARIA accordion pattern (button controls with aria-expanded/aria-controls)",
+                                             "Keyboard support: Space/Enter for toggle, Tab for focus navigation",
+                                             "Semantic markup using details/summary or button/div regions"
+                                         ]
+                            },
+                 "ruleSuggestions":  [
+                                         {
+                                             "title":  "Accessible Accordion Pattern",
+                                             "appliesTo":  "FAQ Collection",
+                                             "rule":  "Use role=\u0027region\u0027 for panel and aria-controls for trigger",
+                                             "reason":  "Improves screen reader navigation in nested structures",
+                                             "validation":  "Check aria-expanded state changes on click",
+                                             "examplePattern":  "\u003cbutton aria-expanded=\u0027false\u0027 aria-controls=\u0027id\u0027\u003e...\u003c/button\u003e\u003cdiv id=\u0027id\u0027 hidden\u003e...\u003c/div\u003e"
+                                         }
+                                     ],
+                 "implementations":  {
+                                         "aem":  {
+                                                     "model":  [
+                                                                   {
+                                                                       "field":  "questions",
+                                                                       "type":  "multifield",
+                                                                       "note":  "Collection of FAQ items"
+                                                                   },
+                                                                   {
+                                                                       "field":  "questions[].question",
+                                                                       "type":  "string",
+                                                                       "note":  "The FAQ question title"
+                                                                   },
+                                                                   {
+                                                                       "field":  "questions[].answer",
+                                                                       "type":  "richtext",
+                                                                       "note":  "The FAQ answer content"
+                                                                   },
+                                                                   {
+                                                                       "field":  "allowMultipleOpen",
+                                                                       "type":  "boolean",
+                                                                       "note":  "Configuration to allow multiple FAQs open at once"
+                                                                   }
+                                                               ],
+                                                     "files":  [
+                                                                   {
+                                                                       "name":  "apps/site/components/fAQCollection/.content.xml",
+                                                                       "lang":  "xml",
+                                                                       "code":  "\u003c?xml version=\"1.0\" encoding=\"UTF-8\"?\u003e\n\u003cjcr:root xmlns:cq=\"http://www.day.com/jcr/cq/1.0\" xmlns:jcr=\"http://www.jcp.org/jcr/1.0\" xmlns:sling=\"http://sling.apache.org/jcr/sling/1.0\"\n    jcr:primaryType=\"cq:Component\"\n    jcr:title=\"FAQ Collection\"\n    componentGroup=\"special-components\"/\u003e"
+                                                                   },
+                                                                   {
+                                                                       "name":  "apps/site/components/fAQCollection/_cq_dialog/.content.xml",
+                                                                       "lang":  "xml",
+                                                                       "code":  "\u003c?xml version=\"1.0\" encoding=\"UTF-8\"?\u003e\n\u003cjcr:root xmlns:sling=\"http://sling.apache.org/jcr/sling/1.0\"\n    xmlns:cq=\"http://www.day.com/jcr/cq/1.0\"\n    xmlns:jcr=\"http://www.jcp.org/jcr/1.0\"\n    xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\"\n    jcr:primaryType=\"nt:unstructured\"\n    jcr:title=\"FAQ Collection\"\n    sling:resourceType=\"cq/gui/components/authoring/dialog\"\u003e\n  \u003ccontent jcr:primaryType=\"nt:unstructured\" sling:resourceType=\"granite/ui/components/coral/foundation/container\"\u003e\n    \u003citems jcr:primaryType=\"nt:unstructured\"\u003e\n      \u003callowMultipleOpen jcr:primaryType=\"nt:unstructured\" sling:resourceType=\"granite/ui/components/coral/foundation/form/checkbox\" fieldLabel=\"Allow Multiple Open\" name=\"./allowMultipleOpen\" text=\"Allow Multiple Open\" value=\"{Boolean}true\" uncheckedValue=\"{Boolean}false\"/\u003e\n      \u003cquestions jcr:primaryType=\"nt:unstructured\" sling:resourceType=\"granite/ui/components/coral/foundation/form/multifield\" fieldLabel=\"Questions\" composite=\"{Boolean}true\" required=\"{Boolean}true\"\u003e\n        \u003cfield jcr:primaryType=\"nt:unstructured\" sling:resourceType=\"granite/ui/components/coral/foundation/container\" name=\"./questions\"\u003e\n          \u003citems jcr:primaryType=\"nt:unstructured\"\u003e\n              \u003cquestion jcr:primaryType=\"nt:unstructured\" sling:resourceType=\"granite/ui/components/coral/foundation/form/textfield\" fieldLabel=\"Question\" name=\"question\" required=\"{Boolean}true\"/\u003e\n              \u003canswer jcr:primaryType=\"nt:unstructured\" sling:resourceType=\"cq/gui/components/authoring/dialog/richtext\" fieldLabel=\"Answer\" name=\"answer\" required=\"{Boolean}true\" useFixedInlineToolbar=\"{Boolean}true\"/\u003e\n          \u003c/items\u003e\n        \u003c/field\u003e\n      \u003c/questions\u003e\n    \u003c/items\u003e\n  \u003c/content\u003e\n\u003c/jcr:root\u003e"
+                                                                   },
+                                                                   {
+                                                                       "name":  "apps/site/components/fAQCollection/fAQCollection.html",
+                                                                       "lang":  "htl",
+                                                                       "code":  "\u003csly data-sly-use.clientlib=\"/libs/granite/sightly/templates/clientlib.html\"/\u003e\n\u003csly /\u003e\n\u003csly /\u003e\n\u003csly data-sly-use.model=\"com.example.site.core.models.FAQCollectionModel\"/\u003e\n\u003csly data-sly-call=\"${clientlib.css @ categories=\u0027faq.components.collection\u0027}\"\u003e\u003c/sly\u003e\n\u003csly data-sly-call=\"${clientlib.js @ categories=\u0027faq.components.collection\u0027}\"\u003e\u003c/sly\u003e\n\u003cdiv class=\"cmp-f-aqcollection\" data-cmp-is=\"accordion\" data-sly-test=\"${model.questions}\"\u003e\n  \u003cdiv class=\"cmp-f-aqcollection__items\" data-sly-list.item=\"${model.questions}\"\u003e\n    \u003cdiv class=\"cmp-f-aqcollection__item\"\u003e\n      \u003ch3 class=\"cmp-f-aqcollection__heading\"\u003e\n        \u003cbutton type=\"button\" class=\"cmp-f-aqcollection__trigger\" id=\"${resource.path}-accordion-trigger-${itemList.index}\" aria-controls=\"${resource.path}-accordion-panel-${itemList.index}\" aria-expanded=\"false\"\u003e${item.valueMap.question}\u003c/button\u003e\n      \u003c/h3\u003e\n      \u003cdiv class=\"cmp-f-aqcollection__panel\" id=\"${resource.path}-accordion-panel-${itemList.index}\" role=\"region\" aria-labelledby=\"${resource.path}-accordion-trigger-${itemList.index}\" hidden\u003e\n        \u003cdiv class=\"cmp-f-aqcollection__answer\"\u003e${item.valueMap.answer @ context=\u0027html\u0027}\u003c/div\u003e\n      \u003c/div\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n\u003c/div\u003e"
+                                                                   },
+                                                                   {
+                                                                       "name":  "core/models/FAQCollectionModel.java",
+                                                                       "lang":  "java",
+                                                                       "code":  "package com.example.site.core.models;\n\nimport java.util.List;\nimport org.apache.sling.api.SlingHttpServletRequest;\nimport org.apache.sling.api.resource.Resource;\nimport org.apache.sling.models.annotations.DefaultInjectionStrategy;\nimport org.apache.sling.models.annotations.Model;\nimport org.apache.sling.models.annotations.injectorspecific.ValueMapValue;\nimport org.apache.sling.models.annotations.injectorspecific.ChildResource;\n\n@Model(adaptables = SlingHttpServletRequest.class, defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)\npublic class FAQCollectionModel {\n\n    @ValueMapValue(name = \"allowMultipleOpen\")\n    private Boolean allowMultipleOpen;\n    @ChildResource(name = \"questions\")\n    private List\u003cResource\u003e questions;\n\n    public String getId() { return \"fAQCollection-\" + Math.abs(hashCode()); }\n    public Boolean getAllowMultipleOpen() { return allowMultipleOpen; }\n    public List\u003cResource\u003e getQuestions() { return questions; }\n}"
+                                                                   },
+                                                                   {
+                                                                       "name":  "apps/site/components/fAQCollection/component.json",
+                                                                       "lang":  "json",
+                                                                       "code":  "{\n  \"component\": {\n    \"name\": \"FAQ Collection\",\n    \"resourceType\": \"site/components/fAQCollection\",\n    \"group\": \"special-components\",\n    \"clientlibCategory\": \"faq.components.collection\"\n  },\n  \"fields\": [\n    {\n      \"name\": \"allowMultipleOpen\",\n      \"label\": \"Allow Multiple Open\",\n      \"type\": \"checkbox\",\n      \"required\": false,\n      \"role\": \"other\",\n      \"options\": [],\n      \"rootPath\": \"\",\n      \"composite\": false,\n      \"minItems\": 0,\n      \"maxItems\": 20,\n      \"defaultValue\": \"\",\n      \"description\": \"If enabled, multiple FAQ items can remain open simultaneously.\"\n    },\n    {\n      \"name\": \"questions\",\n      \"label\": \"Questions\",\n      \"type\": \"multifield\",\n      \"required\": true,\n      \"role\": \"other\",\n      \"options\": [],\n      \"rootPath\": \"\",\n      \"composite\": true,\n      \"minItems\": 0,\n      \"maxItems\": 20,\n      \"defaultValue\": \"\",\n      \"description\": \"\",\n      \"children\": [\n        {\n          \"name\": \"question\",\n          \"label\": \"Question\",\n          \"type\": \"text\",\n          \"required\": true,\n          \"role\": \"other\",\n          \"options\": [],\n          \"rootPath\": \"\",\n          \"composite\": false,\n          \"minItems\": 0,\n          \"maxItems\": 20,\n          \"defaultValue\": \"\",\n          \"description\": \"\"\n        },\n        {\n          \"name\": \"answer\",\n          \"label\": \"Answer\",\n          \"type\": \"richtext\",\n          \"required\": true,\n          \"role\": \"body\",\n          \"options\": [],\n          \"rootPath\": \"\",\n          \"composite\": false,\n          \"minItems\": 0,\n          \"maxItems\": 20,\n          \"defaultValue\": \"\",\n          \"description\": \"\"\n        }\n      ]\n    }\n  ]\n}\n"
+                                                                   },
+                                                                   {
+                                                                       "name":  "apps/site/components/fAQCollection/clientlib/.content.xml",
+                                                                       "lang":  "xml",
+                                                                       "code":  "\u003c?xml version=\"1.0\" encoding=\"UTF-8\"?\u003e\n\u003cjcr:root xmlns:jcr=\"http://www.jcp.org/jcr/1.0\"\n    jcr:primaryType=\"cq:ClientLibraryFolder\"\n    categories=\"[faq.components.collection]\"\n    allowProxy=\"{Boolean}true\"/\u003e"
+                                                                   },
+                                                                   {
+                                                                       "name":  "apps/site/components/fAQCollection/clientlib/css.txt",
+                                                                       "lang":  "txt",
+                                                                       "code":  "#base=css\nfAQCollection.css\n"
+                                                                   },
+                                                                   {
+                                                                       "name":  "apps/site/components/fAQCollection/clientlib/css/fAQCollection.css",
+                                                                       "lang":  "css",
+                                                                       "code":  ".cmp-f-aqcollection { width: 100%; }\n.cmp-f-aqcollection__item { border-bottom: 1px solid var(--accordion-border-color, currentColor); }\n.cmp-f-aqcollection__heading { margin: 0; }\n.cmp-f-aqcollection__trigger { display: flex; width: 100%; align-items: center; justify-content: space-between; padding: 1rem; border: 0; background: transparent; color: inherit; font: inherit; font-weight: 600; text-align: left; cursor: pointer; }\n.cmp-f-aqcollection__trigger[aria-expanded=\"true\"] { color: var(--accordion-active-color, currentColor); }\n.cmp-f-aqcollection__trigger:focus-visible { outline: 2px solid var(--accordion-focus-color, currentColor); outline-offset: 3px; }\n.cmp-f-aqcollection__panel[hidden] { display: none !important; }\n.cmp-f-aqcollection__panel { padding: 0 1rem 1rem; }"
+                                                                   },
+                                                                   {
+                                                                       "name":  "apps/site/components/fAQCollection/clientlib/js.txt",
+                                                                       "lang":  "txt",
+                                                                       "code":  "#base=js\nfAQCollection.js\n"
+                                                                   },
+                                                                   {
+                                                                       "name":  "apps/site/components/fAQCollection/clientlib/js/fAQCollection.js",
+                                                                       "lang":  "js",
+                                                                       "code":  "(function () {\n  \u0027use strict\u0027;\n  var selector = \u0027[data-cmp-is=\"accordion\"]\u0027;\n  function owned(root, childSelector) {\n    return Array.prototype.filter.call(root.querySelectorAll(childSelector), function (node) { return node.closest(selector) === root; });\n  }\n  function initialize(root) {\n    if (root.getAttribute(\"data-accordion-initialized\") === \"true\") return;\n    root.setAttribute(\"data-accordion-initialized\", \"true\");\n    var triggers = owned(root, \u0027[aria-controls]\u0027);\n    var panels = owned(root, \u0027[role=\"region\"]\u0027);\n    if (!triggers.length || !panels.length) return;\n    function panelFor(trigger) {\n      var id = trigger.getAttribute(\"aria-controls\");\n      return panels.find(function (panel) { return panel.id === id; });\n    }\n    function close(trigger) {\n      var panel = panelFor(trigger);\n      trigger.setAttribute(\"aria-expanded\", \"false\");\n      if (panel) panel.hidden = true;\n    }\n    triggers.forEach(function (trigger) {\n      trigger.addEventListener(\"click\", function () {\n        var wasExpanded = trigger.getAttribute(\"aria-expanded\") === \"true\";\n        triggers.forEach(close);\n        if (!wasExpanded) {\n          var panel = panelFor(trigger);\n          trigger.setAttribute(\"aria-expanded\", \"true\");\n          if (panel) panel.hidden = false;\n        }\n      });\n    });\n  }\n  function initializeAll() { document.querySelectorAll(selector).forEach(initialize); }\n  if (document.readyState === \"loading\") document.addEventListener(\"DOMContentLoaded\", initializeAll); else initializeAll();\n})();"
+                                                                   }
+                                                               ],
+                                                     "fields":  [
+                                                                    {
+                                                                        "name":  "allowMultipleOpen",
+                                                                        "label":  "Allow Multiple Open",
+                                                                        "type":  "checkbox",
+                                                                        "required":  false,
+                                                                        "role":  "other",
+                                                                        "options":  [
+
+                                                                                    ],
+                                                                        "rootPath":  "",
+                                                                        "composite":  false,
+                                                                        "children":  [
+
+                                                                                     ],
+                                                                        "minItems":  0,
+                                                                        "maxItems":  20,
+                                                                        "defaultValue":  "",
+                                                                        "description":  "If enabled, multiple FAQ items can remain open simultaneously."
+                                                                    },
+                                                                    {
+                                                                        "name":  "questions",
+                                                                        "label":  "Questions",
+                                                                        "type":  "multifield",
+                                                                        "required":  true,
+                                                                        "role":  "other",
+                                                                        "options":  [
+
+                                                                                    ],
+                                                                        "rootPath":  "",
+                                                                        "composite":  true,
+                                                                        "children":  [
+                                                                                         {
+                                                                                             "name":  "question",
+                                                                                             "label":  "Question",
+                                                                                             "type":  "text",
+                                                                                             "required":  true,
+                                                                                             "role":  "other",
+                                                                                             "options":  [
+
+                                                                                                         ],
+                                                                                             "rootPath":  "",
+                                                                                             "composite":  false,
+                                                                                             "children":  [
+
+                                                                                                          ],
+                                                                                             "minItems":  0,
+                                                                                             "maxItems":  20,
+                                                                                             "defaultValue":  "",
+                                                                                             "description":  ""
+                                                                                         },
+                                                                                         {
+                                                                                             "name":  "answer",
+                                                                                             "label":  "Answer",
+                                                                                             "type":  "richtext",
+                                                                                             "required":  true,
+                                                                                             "role":  "body",
+                                                                                             "options":  [
+
+                                                                                                         ],
+                                                                                             "rootPath":  "",
+                                                                                             "composite":  false,
+                                                                                             "children":  [
+
+                                                                                                          ],
+                                                                                             "minItems":  0,
+                                                                                             "maxItems":  20,
+                                                                                             "defaultValue":  "",
+                                                                                             "description":  ""
+                                                                                         }
+                                                                                     ],
+                                                                        "minItems":  0,
+                                                                        "maxItems":  20,
+                                                                        "defaultValue":  "",
+                                                                        "description":  ""
+                                                                    }
+                                                                ],
+                                                     "componentGroup":  "special-components",
+                                                     "clientlibCategory":  "faq.components.collection",
+                                                     "proxyComponent":  false,
+                                                     "resourceSuperType":  "",
+                                                     "directJcrHtl":  "\u003csly data-sly-use.clientlib=\"/libs/granite/sightly/templates/clientlib.html\"/\u003e\n\u003csly data-sly-call=\"${clientlib.css @ categories=\u0027faq.components.collection\u0027}\"\u003e\u003c/sly\u003e\n\u003csly data-sly-call=\"${clientlib.js @ categories=\u0027faq.components.collection\u0027}\"\u003e\u003c/sly\u003e\n\u003csly data-sly-list.group=\"${resource.children}\"\u003e\n  \u003csly data-sly-test=\"${group.name == \u0027questions\u0027}\"\u003e\n    \u003cdiv class=\"cmp-f-aqcollection\" data-cmp-is=\"accordion\"\u003e\n      \u003cdiv class=\"cmp-f-aqcollection__items\" data-sly-list.item=\"${group.children}\"\u003e\n        \u003cdiv class=\"cmp-f-aqcollection__item\"\u003e\n          \u003ch3 class=\"cmp-f-aqcollection__heading\"\u003e\n            \u003cbutton type=\"button\" class=\"cmp-f-aqcollection__trigger\" id=\"${resource.path}-accordion-trigger-${itemList.index}\" aria-controls=\"${resource.path}-accordion-panel-${itemList.index}\" aria-expanded=\"false\"\u003e${item.valueMap.question}\u003c/button\u003e\n          \u003c/h3\u003e\n          \u003cdiv class=\"cmp-f-aqcollection__panel\" id=\"${resource.path}-accordion-panel-${itemList.index}\" role=\"region\" aria-labelledby=\"${resource.path}-accordion-trigger-${itemList.index}\" hidden\u003e\n            \u003cdiv class=\"cmp-f-aqcollection__answer\"\u003e${item.valueMap.answer @ context=\u0027html\u0027}\u003c/div\u003e\n          \u003c/div\u003e\n        \u003c/div\u003e\n      \u003c/div\u003e\n    \u003c/div\u003e\n  \u003c/sly\u003e\n\u003c/sly\u003e"
+                                                 },
+                                         "eds":  {
+                                                     "model":  [
+                                                                   {
+                                                                       "field":  "questions",
+                                                                       "type":  "collection",
+                                                                       "note":  "List of FAQ objects"
+                                                                   },
+                                                                   {
+                                                                       "field":  "questions[].question",
+                                                                       "type":  "text",
+                                                                       "note":  "Question text"
+                                                                   },
+                                                                   {
+                                                                       "field":  "questions[].answer",
+                                                                       "type":  "richtext",
+                                                                       "note":  "Answer content"
+                                                                   },
+                                                                   {
+                                                                       "field":  "allowMultipleOpen",
+                                                                       "type":  "boolean",
+                                                                       "note":  "Toggle behavior"
+                                                                   }
+                                                               ],
+                                                     "files":  [
+
+                                                               ]
+                                                 },
+                                         "cf":  {
+                                                    "model":  [
+                                                                  {
+                                                                      "field":  "questions",
+                                                                      "type":  "array",
+                                                                      "note":  "FAQ items"
+                                                                  },
+                                                                  {
+                                                                      "field":  "questions[].question",
+                                                                      "type":  "text",
+                                                                      "note":  "Question"
+                                                                  },
+                                                                  {
+                                                                      "field":  "questions[].answer",
+                                                                      "type":  "rich-text",
+                                                                      "note":  "Answer"
+                                                                  },
+                                                                  {
+                                                                      "field":  "allowMultipleOpen",
+                                                                      "type":  "boolean",
+                                                                      "note":  "Config"
+                                                                  }
+                                                              ],
+                                                    "files":  [
+
+                                                              ]
+                                                },
+                                         "opti":  {
+                                                      "model":  [
+                                                                    {
+                                                                        "field":  "AllowMultipleOpen",
+                                                                        "type":  "bool",
+                                                                        "note":  "Allow Multiple Open"
+                                                                    },
+                                                                    {
+                                                                        "field":  "Questions",
+                                                                        "type":  "ContentArea list",
+                                                                        "note":  "Questions"
+                                                                    },
+                                                                    {
+                                                                        "field":  "Questions[].Question",
+                                                                        "type":  "string",
+                                                                        "note":  "Question"
+                                                                    },
+                                                                    {
+                                                                        "field":  "Questions[].Answer",
+                                                                        "type":  "XhtmlString",
+                                                                        "note":  "Answer"
+                                                                    }
+                                                                ],
+                                                      "files":  [
+
+                                                                ]
+                                                  }
+                                     }
+             }
+}

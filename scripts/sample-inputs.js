@@ -9,6 +9,5 @@ export function defaultInput(id) {
     case 'map':         return { ...d };
     case 'audit':       return { mode: 'url', target: d.url, checks: ['a11y', 'seo', 'perf', 'ds', 'content'] };
     case 'migrate':     return { url: d.url, target: d.target };
-    case 'personalize': return { ...d };
   }
 }

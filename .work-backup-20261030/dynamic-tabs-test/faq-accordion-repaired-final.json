@@ -1,0 +1,222 @@
+{
+    "data":  {
+                 "component":  {
+                                   "name":  "FAQ Accordion",
+                                   "cms":  "aem",
+                                   "summary":  "An interactive accordion component for FAQ sections, allowing authors to manage multiple question-answer pairs with single-open behavior."
+                               },
+                 "design":  {
+                                "a11y":  [
+                                             "Use semantic button elements for accordion headers with aria-expanded attributes",
+                                             "Use aria-controls to link headers to content panels",
+                                             "Implement keyboard navigation support for accordion headers",
+                                             "Ensure color contrast meets WCAG 2.2 AA standards"
+                                         ]
+                            },
+                 "ruleSuggestions":  [
+
+                                     ],
+                 "implementations":  {
+                                         "aem":  {
+                                                     "model":  [
+                                                                   {
+                                                                       "field":  "items",
+                                                                       "type":  "multifield",
+                                                                       "note":  "List of FAQ items containing question and answer"
+                                                                   },
+                                                                   {
+                                                                       "field":  "items[].question",
+                                                                       "type":  "string",
+                                                                       "note":  "The text for the FAQ question"
+                                                                   },
+                                                                   {
+                                                                       "field":  "items[].answer",
+                                                                       "type":  "richtext",
+                                                                       "note":  "The formatted content for the answer"
+                                                                   }
+                                                               ],
+                                                     "files":  [
+                                                                   {
+                                                                       "name":  "apps/site/components/fAQAccordion/.content.xml",
+                                                                       "lang":  "xml",
+                                                                       "code":  "\u003c?xml version=\"1.0\" encoding=\"UTF-8\"?\u003e\n\u003cjcr:root xmlns:cq=\"http://www.day.com/jcr/cq/1.0\" xmlns:jcr=\"http://www.jcp.org/jcr/1.0\" xmlns:sling=\"http://sling.apache.org/jcr/sling/1.0\"\n    jcr:primaryType=\"cq:Component\"\n    jcr:title=\"FAQ Accordion\"\n    componentGroup=\"Content\"/\u003e"
+                                                                   },
+                                                                   {
+                                                                       "name":  "apps/site/components/fAQAccordion/_cq_dialog/.content.xml",
+                                                                       "lang":  "xml",
+                                                                       "code":  "\u003c?xml version=\"1.0\" encoding=\"UTF-8\"?\u003e\n\u003cjcr:root xmlns:sling=\"http://sling.apache.org/jcr/sling/1.0\"\n    xmlns:cq=\"http://www.day.com/jcr/cq/1.0\"\n    xmlns:jcr=\"http://www.jcp.org/jcr/1.0\"\n    xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\"\n    jcr:primaryType=\"nt:unstructured\"\n    jcr:title=\"FAQ Accordion\"\n    sling:resourceType=\"cq/gui/components/authoring/dialog\"\u003e\n  \u003ccontent jcr:primaryType=\"nt:unstructured\" sling:resourceType=\"granite/ui/components/coral/foundation/container\"\u003e\n    \u003citems jcr:primaryType=\"nt:unstructured\"\u003e\n      \u003citems jcr:primaryType=\"nt:unstructured\" sling:resourceType=\"granite/ui/components/coral/foundation/form/multifield\" fieldLabel=\"FAQ Items\" composite=\"{Boolean}true\" required=\"{Boolean}true\"\u003e\n        \u003cfield jcr:primaryType=\"nt:unstructured\" sling:resourceType=\"granite/ui/components/coral/foundation/container\" name=\"./items\"\u003e\n          \u003citems jcr:primaryType=\"nt:unstructured\"\u003e\n              \u003cquestion jcr:primaryType=\"nt:unstructured\" sling:resourceType=\"granite/ui/components/coral/foundation/form/textfield\" fieldLabel=\"Question\" name=\"question\" required=\"{Boolean}true\"/\u003e\n              \u003canswer jcr:primaryType=\"nt:unstructured\" sling:resourceType=\"cq/gui/components/authoring/dialog/richtext\" fieldLabel=\"Answer\" name=\"answer\" required=\"{Boolean}true\" useFixedInlineToolbar=\"{Boolean}true\"/\u003e\n          \u003c/items\u003e\n        \u003c/field\u003e\n      \u003c/items\u003e\n    \u003c/items\u003e\n  \u003c/content\u003e\n\u003c/jcr:root\u003e"
+                                                                   },
+                                                                   {
+                                                                       "name":  "apps/site/components/fAQAccordion/fAQAccordion.html",
+                                                                       "lang":  "htl",
+                                                                       "code":  "\u003csly data-sly-use.clientlib=\"/libs/granite/sightly/templates/clientlib.html\"/\u003e\n\u003csly /\u003e\n\u003csly /\u003e\n\u003csly data-sly-use.model=\"com.example.site.core.models.FAQAccordionModel\"/\u003e\n\u003csly data-sly-call=\"${clientlib.css @ categories=\u0027site.components.faqAccordion\u0027}\"\u003e\u003c/sly\u003e\n\u003csly data-sly-call=\"${clientlib.js @ categories=\u0027site.components.faqAccordion\u0027}\"\u003e\u003c/sly\u003e\n\u003cdiv class=\"cmp-f-aqaccordion\" data-cmp-is=\"accordion\" data-sly-test=\"${model.items}\"\u003e\n  \u003cdiv class=\"cmp-f-aqaccordion__items\" data-sly-list.item=\"${model.items}\"\u003e\n    \u003cdiv class=\"cmp-f-aqaccordion__item\"\u003e\n      \u003ch3 class=\"cmp-f-aqaccordion__heading\"\u003e\n        \u003cbutton type=\"button\" class=\"cmp-f-aqaccordion__trigger\" id=\"${resource.path}-accordion-trigger-${itemList.index}\" aria-controls=\"${resource.path}-accordion-panel-${itemList.index}\" aria-expanded=\"false\"\u003e${item.valueMap.question}\u003c/button\u003e\n      \u003c/h3\u003e\n      \u003cdiv class=\"cmp-f-aqaccordion__panel\" id=\"${resource.path}-accordion-panel-${itemList.index}\" role=\"region\" aria-labelledby=\"${resource.path}-accordion-trigger-${itemList.index}\" hidden\u003e\n        \u003cdiv class=\"cmp-f-aqaccordion__answer\"\u003e${item.valueMap.answer @ context=\u0027html\u0027}\u003c/div\u003e\n      \u003c/div\u003e\n    \u003c/div\u003e\n  \u003c/div\u003e\n\u003c/div\u003e"
+                                                                   },
+                                                                   {
+                                                                       "name":  "core/models/FAQAccordionModel.java",
+                                                                       "lang":  "java",
+                                                                       "code":  "package com.example.site.core.models;\n\nimport java.util.List;\nimport org.apache.sling.api.SlingHttpServletRequest;\nimport org.apache.sling.api.resource.Resource;\nimport org.apache.sling.models.annotations.DefaultInjectionStrategy;\nimport org.apache.sling.models.annotations.Model;\nimport org.apache.sling.models.annotations.injectorspecific.ValueMapValue;\nimport org.apache.sling.models.annotations.injectorspecific.ChildResource;\n\n@Model(adaptables = SlingHttpServletRequest.class, defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)\npublic class FAQAccordionModel {\n\n    @ChildResource(name = \"items\")\n    private List\u003cResource\u003e items;\n\n    public String getId() { return \"fAQAccordion-\" + Math.abs(hashCode()); }\n    public List\u003cResource\u003e getItems() { return items; }\n}"
+                                                                   },
+                                                                   {
+                                                                       "name":  "apps/site/components/fAQAccordion/component.json",
+                                                                       "lang":  "json",
+                                                                       "code":  "{\n  \"component\": {\n    \"name\": \"FAQ Accordion\",\n    \"resourceType\": \"site/components/fAQAccordion\",\n    \"group\": \"Content\",\n    \"clientlibCategory\": \"site.components.faqAccordion\"\n  },\n  \"fields\": [\n    {\n      \"name\": \"items\",\n      \"label\": \"FAQ Items\",\n      \"type\": \"multifield\",\n      \"required\": true,\n      \"role\": \"other\",\n      \"options\": [],\n      \"rootPath\": \"\",\n      \"composite\": true,\n      \"minItems\": 0,\n      \"maxItems\": 20,\n      \"defaultValue\": \"\",\n      \"description\": \"\",\n      \"children\": [\n        {\n          \"name\": \"question\",\n          \"label\": \"Question\",\n          \"type\": \"text\",\n          \"required\": true,\n          \"role\": \"title\",\n          \"options\": [],\n          \"rootPath\": \"\",\n          \"composite\": false,\n          \"minItems\": 0,\n          \"maxItems\": 20,\n          \"defaultValue\": \"\",\n          \"description\": \"\"\n        },\n        {\n          \"name\": \"answer\",\n          \"label\": \"Answer\",\n          \"type\": \"richtext\",\n          \"required\": true,\n          \"role\": \"body\",\n          \"options\": [],\n          \"rootPath\": \"\",\n          \"composite\": false,\n          \"minItems\": 0,\n          \"maxItems\": 20,\n          \"defaultValue\": \"\",\n          \"description\": \"\"\n        }\n      ]\n    }\n  ]\n}\n"
+                                                                   },
+                                                                   {
+                                                                       "name":  "apps/site/components/fAQAccordion/clientlib/.content.xml",
+                                                                       "lang":  "xml",
+                                                                       "code":  "\u003c?xml version=\"1.0\" encoding=\"UTF-8\"?\u003e\n\u003cjcr:root xmlns:jcr=\"http://www.jcp.org/jcr/1.0\"\n    jcr:primaryType=\"cq:ClientLibraryFolder\"\n    categories=\"[site.components.faqAccordion]\"\n    allowProxy=\"{Boolean}true\"/\u003e"
+                                                                   },
+                                                                   {
+                                                                       "name":  "apps/site/components/fAQAccordion/clientlib/css.txt",
+                                                                       "lang":  "txt",
+                                                                       "code":  "#base=css\nfAQAccordion.css\n"
+                                                                   },
+                                                                   {
+                                                                       "name":  "apps/site/components/fAQAccordion/clientlib/css/fAQAccordion.css",
+                                                                       "lang":  "css",
+                                                                       "code":  ".cmp-f-aqaccordion { width: 100%; }\n.cmp-f-aqaccordion__item { border-bottom: 1px solid var(--accordion-border-color, currentColor); }\n.cmp-f-aqaccordion__heading { margin: 0; }\n.cmp-f-aqaccordion__trigger { display: flex; width: 100%; align-items: center; justify-content: space-between; padding: 1rem; border: 0; background: transparent; color: inherit; font: inherit; font-weight: 600; text-align: left; cursor: pointer; }\n.cmp-f-aqaccordion__trigger[aria-expanded=\"true\"] { color: var(--accordion-active-color, currentColor); }\n.cmp-f-aqaccordion__trigger:focus-visible { outline: 2px solid var(--accordion-focus-color, currentColor); outline-offset: 3px; }\n.cmp-f-aqaccordion__panel[hidden] { display: none !important; }\n.cmp-f-aqaccordion__panel { padding: 0 1rem 1rem; }"
+                                                                   },
+                                                                   {
+                                                                       "name":  "apps/site/components/fAQAccordion/clientlib/js.txt",
+                                                                       "lang":  "txt",
+                                                                       "code":  "#base=js\nfAQAccordion.js\n"
+                                                                   },
+                                                                   {
+                                                                       "name":  "apps/site/components/fAQAccordion/clientlib/js/fAQAccordion.js",
+                                                                       "lang":  "js",
+                                                                       "code":  "(function () {\n  \u0027use strict\u0027;\n  var selector = \u0027[data-cmp-is=\"accordion\"]\u0027;\n  function owned(root, childSelector) {\n    return Array.prototype.filter.call(root.querySelectorAll(childSelector), function (node) { return node.closest(selector) === root; });\n  }\n  function initialize(root) {\n    if (root.getAttribute(\"data-accordion-initialized\") === \"true\") return;\n    root.setAttribute(\"data-accordion-initialized\", \"true\");\n    var triggers = owned(root, \u0027[aria-controls]\u0027);\n    var panels = owned(root, \u0027[role=\"region\"]\u0027);\n    if (!triggers.length || !panels.length) return;\n    function panelFor(trigger) {\n      var id = trigger.getAttribute(\"aria-controls\");\n      return panels.find(function (panel) { return panel.id === id; });\n    }\n    function close(trigger) {\n      var panel = panelFor(trigger);\n      trigger.setAttribute(\"aria-expanded\", \"false\");\n      if (panel) panel.hidden = true;\n    }\n    triggers.forEach(function (trigger) {\n      trigger.addEventListener(\"click\", function () {\n        var wasExpanded = trigger.getAttribute(\"aria-expanded\") === \"true\";\n        triggers.forEach(close);\n        if (!wasExpanded) {\n          var panel = panelFor(trigger);\n          trigger.setAttribute(\"aria-expanded\", \"true\");\n          if (panel) panel.hidden = false;\n        }\n      });\n    });\n  }\n  function initializeAll() { document.querySelectorAll(selector).forEach(initialize); }\n  if (document.readyState === \"loading\") document.addEventListener(\"DOMContentLoaded\", initializeAll); else initializeAll();\n})();"
+                                                                   }
+                                                               ],
+                                                     "fields":  [
+                                                                    {
+                                                                        "name":  "items",
+                                                                        "label":  "FAQ Items",
+                                                                        "type":  "multifield",
+                                                                        "required":  true,
+                                                                        "role":  "other",
+                                                                        "options":  [
+
+                                                                                    ],
+                                                                        "rootPath":  "",
+                                                                        "composite":  true,
+                                                                        "children":  [
+                                                                                         {
+                                                                                             "name":  "question",
+                                                                                             "label":  "Question",
+                                                                                             "type":  "text",
+                                                                                             "required":  true,
+                                                                                             "role":  "title",
+                                                                                             "options":  [
+
+                                                                                                         ],
+                                                                                             "rootPath":  "",
+                                                                                             "composite":  false,
+                                                                                             "children":  [
+
+                                                                                                          ],
+                                                                                             "minItems":  0,
+                                                                                             "maxItems":  20,
+                                                                                             "defaultValue":  "",
+                                                                                             "description":  ""
+                                                                                         },
+                                                                                         {
+                                                                                             "name":  "answer",
+                                                                                             "label":  "Answer",
+                                                                                             "type":  "richtext",
+                                                                                             "required":  true,
+                                                                                             "role":  "body",
+                                                                                             "options":  [
+
+                                                                                                         ],
+                                                                                             "rootPath":  "",
+                                                                                             "composite":  false,
+                                                                                             "children":  [
+
+                                                                                                          ],
+                                                                                             "minItems":  0,
+                                                                                             "maxItems":  20,
+                                                                                             "defaultValue":  "",
+                                                                                             "description":  ""
+                                                                                         }
+                                                                                     ],
+                                                                        "minItems":  0,
+                                                                        "maxItems":  20,
+                                                                        "defaultValue":  "",
+                                                                        "description":  ""
+                                                                    }
+                                                                ],
+                                                     "componentGroup":  "Content",
+                                                     "clientlibCategory":  "site.components.faqAccordion",
+                                                     "proxyComponent":  false,
+                                                     "resourceSuperType":  "",
+                                                     "directJcrHtl":  "\u003csly data-sly-use.clientlib=\"/libs/granite/sightly/templates/clientlib.html\"/\u003e\n\u003csly data-sly-call=\"${clientlib.css @ categories=\u0027site.components.faqAccordion\u0027}\"\u003e\u003c/sly\u003e\n\u003csly data-sly-call=\"${clientlib.js @ categories=\u0027site.components.faqAccordion\u0027}\"\u003e\u003c/sly\u003e\n\u003csly data-sly-list.group=\"${resource.children}\"\u003e\n  \u003csly data-sly-test=\"${group.name == \u0027items\u0027}\"\u003e\n    \u003cdiv class=\"cmp-f-aqaccordion\" data-cmp-is=\"accordion\"\u003e\n      \u003cdiv class=\"cmp-f-aqaccordion__items\" data-sly-list.item=\"${group.children}\"\u003e\n        \u003cdiv class=\"cmp-f-aqaccordion__item\"\u003e\n          \u003ch3 class=\"cmp-f-aqaccordion__heading\"\u003e\n            \u003cbutton type=\"button\" class=\"cmp-f-aqaccordion__trigger\" id=\"${resource.path}-accordion-trigger-${itemList.index}\" aria-controls=\"${resource.path}-accordion-panel-${itemList.index}\" aria-expanded=\"false\"\u003e${item.valueMap.question}\u003c/button\u003e\n          \u003c/h3\u003e\n          \u003cdiv class=\"cmp-f-aqaccordion__panel\" id=\"${resource.path}-accordion-panel-${itemList.index}\" role=\"region\" aria-labelledby=\"${resource.path}-accordion-trigger-${itemList.index}\" hidden\u003e\n            \u003cdiv class=\"cmp-f-aqaccordion__answer\"\u003e${item.valueMap.answer @ context=\u0027html\u0027}\u003c/div\u003e\n          \u003c/div\u003e\n        \u003c/div\u003e\n      \u003c/div\u003e\n    \u003c/div\u003e\n  \u003c/sly\u003e\n\u003c/sly\u003e"
+                                                 },
+                                         "eds":  {
+                                                     "model":  [
+                                                                   {
+                                                                       "field":  "items",
+                                                                       "type":  "Array of objects",
+                                                                       "note":  "FAQ Items"
+                                                                   },
+                                                                   {
+                                                                       "field":  "items[].question",
+                                                                       "type":  "text",
+                                                                       "note":  "Question"
+                                                                   },
+                                                                   {
+                                                                       "field":  "items[].answer",
+                                                                       "type":  "richtext",
+                                                                       "note":  "Answer"
+                                                                   }
+                                                               ],
+                                                     "files":  [
+
+                                                               ]
+                                                 },
+                                         "cf":  {
+                                                    "model":  [
+                                                                  {
+                                                                      "field":  "items",
+                                                                      "type":  "Array of objects",
+                                                                      "note":  "FAQ Items"
+                                                                  },
+                                                                  {
+                                                                      "field":  "items[].question",
+                                                                      "type":  "Symbol",
+                                                                      "note":  "Question"
+                                                                  },
+                                                                  {
+                                                                      "field":  "items[].answer",
+                                                                      "type":  "RichText",
+                                                                      "note":  "Answer"
+                                                                  }
+                                                              ],
+                                                    "files":  [
+
+                                                              ]
+                                                },
+                                         "opti":  {
+                                                      "model":  [
+                                                                    {
+                                                                        "field":  "Items",
+                                                                        "type":  "ContentArea list",
+                                                                        "note":  "FAQ Items"
+                                                                    },
+                                                                    {
+                                                                        "field":  "Items[].Question",
+                                                                        "type":  "string",
+                                                                        "note":  "Question"
+                                                                    },
+                                                                    {
+                                                                        "field":  "Items[].Answer",
+                                                                        "type":  "XhtmlString",
+                                                                        "note":  "Answer"
+                                                                    }
+                                                                ],
+                                                      "files":  [
+
+                                                                ]
+                                                  }
+                                     }
+             }
+}

@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="src/styles/workflow.css">
   <link rel="stylesheet" href="src/styles/results.css">
   <link rel="stylesheet" href="src/styles/ai-picker.css">
+  <link rel="stylesheet" href="src/styles/aem-forge.css">
 </head>
 <body>
   <div class="shell">
@@ -29,9 +30,8 @@
       </div>
       <div class="appbar-tags">
         <div class="ai-picker" id="ai-picker" hidden></div>
-        <span class="pill outline" id="ai-pill" title="Whether results come from the AI or from sample data">Checking AI</span>
-        <span class="pill neutral">Prototype</span>
-      </div>
+        <span class="pill outline" id="ai-pill" title="Status of the configured AI provider API">Checking AI</span>
+              </div>
     </header>
 
     <p class="demo-note">
@@ -43,7 +43,7 @@
     <main id="app"></main>
 
     <footer class="foot">
-      To connect an AI, add a Gemini or OpenAI key to .env and restart. Steps are in README.md under "Connecting an AI".
+      AI generation requires a configured provider API key. Manage CMS environments with Connections.
     </footer>
   </div>
 

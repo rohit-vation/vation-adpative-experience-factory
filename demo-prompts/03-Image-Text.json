@@ -1,0 +1,8 @@
+﻿{
+    "input":  {
+                  "description":  "Create an image-and-text component. Author can choose image position left or right, enter heading and rich text, and optionally add a link. Component group: special-components. Clientlib category: AEMGeeks.components.imageText.",
+                  "name":  "Demo Image Text",
+                  "cms":  "aem"
+              },
+    "workflow":  "create"
+}

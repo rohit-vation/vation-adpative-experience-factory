@@ -1,0 +1,8 @@
+﻿{
+    "input":  {
+                  "description":  "Create a call-to-action component with heading, text, button label and button URL. Add a style dropdown with Primary and Secondary options. Component group: special-components. Clientlib category: AEMGeeks.components.cta.",
+                  "name":  "Demo CTA",
+                  "cms":  "aem"
+              },
+    "workflow":  "create"
+}

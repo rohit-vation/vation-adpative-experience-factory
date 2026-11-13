@@ -2,13 +2,16 @@
 
 import { esc } from '../lib/dom.js';
 import { icon } from '../lib/icons.js';
+import { liveImplementationPanelHTML } from '../ui/live-implementation-template.js';
 
 /** Shown in the result canvas before the first run. */
 export function emptyHTML(workflow) {
+  const liveAemNote = workflow.id === 'create' ? liveImplementationPanelHTML() : '';
   return `
     <div class="empty">
       <h3>What you will get</h3>
       <ul>${workflow.outputs.map((o) => `<li>${esc(o)}</li>`).join('')}</ul>
+      ${liveAemNote}
     </div>`;
 }
 

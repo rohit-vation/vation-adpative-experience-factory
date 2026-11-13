@@ -31,7 +31,11 @@ export async function sendRequest(provider, { url, method = 'POST', headers = {}
 /** Turns a failed reply into an AiError. `upstreamStatus` tells the retry logic what happened. */
 export function upstreamError(provider, model, res) {
   const detail = res.json?.error?.message || res.raw.slice(0, 200);
-  const e = new AiError(friendlyMessage(provider, model, res.status, detail), res.status === 429 ? 429 : 502);
+  // Preserve actionable client errors from the provider instead of turning every
+  // rejected key/model/request into an indistinguishable HTTP 502. Reserve 502 for
+  // upstream server failures or an unclassified gateway error.
+  const status = [400, 401, 403, 404, 409, 422, 429].includes(res.status) ? res.status : 502;
+  const e = new AiError(friendlyMessage(provider, model, res.status, detail), status);
   e.upstreamStatus = res.status;
   return e;
 }
@@ -39,7 +43,8 @@ export function upstreamError(provider, model, res) {
 function friendlyMessage(provider, model, status, detail) {
   const name = provider.label;
   const key = provider.keyEnv;
-  if (status === 401 || status === 403) return `${name} refused the key. Check ${key} in .env and that your account can use the API.`;
+  if (status === 401) return `${name} rejected the configured API key (HTTP 401). Verify that ${key} is an active key issued for ${name} and stored in .env.`;
+  if (status === 403) return `${name} denied the API request (HTTP 403). Check provider permissions, API restrictions and account access for ${key}.`;
   if (status === 400 && /api key|incorrect api|invalid_api_key/i.test(detail)) return `${name} rejected the API key. Check ${key} in .env.`;
   if (status === 404) return `${name} does not know the model "${model}". Pick another model in the page header, or set a valid name in .env.`;
   if (status === 429) return `${name} rate limit or quota reached. Wait a minute and try again, or pick another model.`;

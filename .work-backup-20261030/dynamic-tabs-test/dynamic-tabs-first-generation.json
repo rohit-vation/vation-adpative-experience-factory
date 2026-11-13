@@ -1,0 +1,192 @@
+﻿{
+    "data":  {
+                 "component":  {
+                                   "name":  "Dynamic Tabs",
+                                   "cms":  "aem",
+                                   "summary":  "A fully accessible, multifield-based tabbed component with show/hide functionality."
+                               },
+                 "design":  {
+                                "a11y":  [
+                                             "Follows WAI-ARIA Tabs pattern (role=tablist, role=tab, role=tabpanel).",
+                                             "Keyboard navigation support: Arrow keys to switch tabs.",
+                                             "Appropriate aria-selected and aria-controls attributes."
+                                         ]
+                            },
+                 "ruleSuggestions":  [
+                                         {
+                                             "title":  "AEM Composite Multifield Pattern",
+                                             "appliesTo":  "AEM",
+                                             "rule":  "Use relative naming inside multifield items.",
+                                             "reason":  "Ensures standard Granite UI composite storage.",
+                                             "validation":  "Check JCR node structure for named container nodes.",
+                                             "examplePattern":  "\u003cfield name=\u0027./title\u0027 /\u003e inside a composite container."
+                                         }
+                                     ],
+                 "implementations":  {
+                                         "aem":  {
+                                                     "model":  [
+                                                                   {
+                                                                       "field":  "tabs",
+                                                                       "type":  "List\u003cResource\u003e",
+                                                                       "note":  "Tabs"
+                                                                   },
+                                                                   {
+                                                                       "field":  "tabs[].tabTitle",
+                                                                       "type":  "String",
+                                                                       "note":  "Tab Title"
+                                                                   },
+                                                                   {
+                                                                       "field":  "tabs[].tabContent",
+                                                                       "type":  "Rich Text",
+                                                                       "note":  "Tab Content"
+                                                                   }
+                                                               ],
+                                                     "files":  [
+                                                                   {
+                                                                       "name":  "tabs.html",
+                                                                       "lang":  "html",
+                                                                       "code":  "\u003cdiv class=\u0027dynamic-tabs\u0027 data-sly-use.model=\"com.example.site.core.models.DynamicTabsModel\"\u003e\u003cul role=\u0027tablist\u0027\u003e\u003csly data-sly-list.tab=\u0027${model.tabs}\u0027\u003e\u003cli role=\u0027tab\u0027 id=\u0027tab-${tabList.index}\u0027 aria-controls=\u0027panel-${tabList.index}\u0027\u003e${tab.tabTitle}\u003c/li\u003e\u003c/sly\u003e\u003c/ul\u003e\u003csly data-sly-list.tab=\u0027${model.tabs}\u0027\u003e\u003cdiv role=\u0027tabpanel\u0027 id=\u0027panel-${tabList.index}\u0027 aria-labelledby=\u0027tab-${tabList.index}\u0027\u003e${tab.tabContent @ context=\u0027html\u0027}\u003c/div\u003e\u003c/sly\u003e\u003c/div\u003e"
+                                                                   },
+                                                                   {
+                                                                       "name":  "clientlib/js/tabs.js",
+                                                                       "lang":  "js",
+                                                                       "code":  "document.addEventListener(\u0027DOMContentLoaded\u0027, () =\u003e { document.querySelectorAll(\u0027.dynamic-tabs\u0027).forEach(tabs =\u003e { const items = tabs.querySelectorAll(\u0027[role=\"tab\"]\u0027); items.forEach((tab, i) =\u003e { tab.addEventListener(\u0027click\u0027, () =\u003e { tabs.querySelectorAll(\u0027[role=\"tabpanel\"]\u0027).forEach((p, idx) =\u003e p.style.display = idx === i ? \u0027block\u0027 : \u0027none\u0027); }); }); }); });"
+                                                                   },
+                                                                   {
+                                                                       "name":  "clientlib/css/tabs.css",
+                                                                       "lang":  "css",
+                                                                       "code":  ".dynamic-tabs [role=\u0027tabpanel\u0027] { display: none; } .dynamic-tabs [role=\u0027tabpanel\u0027]:first-child { display: block; }"
+                                                                   }
+                                                               ],
+                                                     "fields":  [
+                                                                    {
+                                                                        "name":  "tabs",
+                                                                        "label":  "Tabs",
+                                                                        "type":  "multifield",
+                                                                        "required":  true,
+                                                                        "role":  "other",
+                                                                        "options":  [
+
+                                                                                    ],
+                                                                        "rootPath":  "",
+                                                                        "composite":  true,
+                                                                        "children":  [
+                                                                                         {
+                                                                                             "name":  "tabTitle",
+                                                                                             "label":  "Tab Title",
+                                                                                             "type":  "text",
+                                                                                             "required":  true,
+                                                                                             "role":  "title",
+                                                                                             "options":  [
+
+                                                                                                         ],
+                                                                                             "rootPath":  "",
+                                                                                             "composite":  false,
+                                                                                             "children":  [
+
+                                                                                                          ],
+                                                                                             "minItems":  0,
+                                                                                             "maxItems":  20,
+                                                                                             "defaultValue":  "",
+                                                                                             "description":  ""
+                                                                                         },
+                                                                                         {
+                                                                                             "name":  "tabContent",
+                                                                                             "label":  "Tab Content",
+                                                                                             "type":  "richtext",
+                                                                                             "required":  true,
+                                                                                             "role":  "body",
+                                                                                             "options":  [
+
+                                                                                                         ],
+                                                                                             "rootPath":  "",
+                                                                                             "composite":  false,
+                                                                                             "children":  [
+
+                                                                                                          ],
+                                                                                             "minItems":  0,
+                                                                                             "maxItems":  20,
+                                                                                             "defaultValue":  "",
+                                                                                             "description":  ""
+                                                                                         }
+                                                                                     ],
+                                                                        "minItems":  0,
+                                                                        "maxItems":  20,
+                                                                        "defaultValue":  "",
+                                                                        "description":  ""
+                                                                    }
+                                                                ],
+                                                     "componentGroup":  "special-components",
+                                                     "proxyComponent":  false,
+                                                     "resourceSuperType":  "",
+                                                     "directJcrHtl":  "\u003csly data-sly-use.clientlib=\"/libs/granite/sightly/templates/clientlib.html\"/\u003e\n\u003csly data-sly-test.hasContent=\"${resource.hasChildren}\"\u003e\u003c/sly\u003e\n\u003csly data-sly-call=\"${clientlib.css @ categories=\u0027site.components.dynamicTabs\u0027}\"\u003e\u003c/sly\u003e\n\u003csection class=\"cmp-dynamic-tabs\"\u003e\n  \u003cdiv class=\"cmp-dynamic-tabs__content\"\u003e\n  \u003csly data-sly-list.group0tabs=\"${resource.children}\"\u003e\n    \u003csly data-sly-test=\"${group0tabs.name == \u0027tabs\u0027}\"\u003e\n      \u003csly data-sly-list.item0tabs=\"${group0tabs.children}\"\u003e\n        \u003cdiv class=\"cmp-dynamic-tabs__tabs-item\"\u003e\n          \u003ch3 data-sly-test=\"${item0tabs.valueMap.tabTitle}\"\u003e${item0tabs.valueMap.tabTitle}\u003c/h3\u003e\n          \u003cp data-sly-test=\"${item0tabs.valueMap.tabContent}\"\u003e${item0tabs.valueMap.tabContent}\u003c/p\u003e\n        \u003c/div\u003e\n      \u003c/sly\u003e\n    \u003c/sly\u003e\n  \u003c/sly\u003e\n  \u003c/div\u003e\n\u003c/section\u003e"
+                                                 },
+                                         "eds":  {
+                                                     "model":  [
+                                                                   {
+                                                                       "field":  "tabs",
+                                                                       "type":  "Array of objects",
+                                                                       "note":  "Tabs"
+                                                                   },
+                                                                   {
+                                                                       "field":  "tabs[].tabTitle",
+                                                                       "type":  "text",
+                                                                       "note":  "Tab Title"
+                                                                   },
+                                                                   {
+                                                                       "field":  "tabs[].tabContent",
+                                                                       "type":  "richtext",
+                                                                       "note":  "Tab Content"
+                                                                   }
+                                                               ],
+                                                     "files":  [
+
+                                                               ]
+                                                 },
+                                         "cf":  {
+                                                    "model":  [
+                                                                  {
+                                                                      "field":  "tabs",
+                                                                      "type":  "Array of objects",
+                                                                      "note":  "Tabs"
+                                                                  },
+                                                                  {
+                                                                      "field":  "tabs[].tabTitle",
+                                                                      "type":  "Symbol",
+                                                                      "note":  "Tab Title"
+                                                                  },
+                                                                  {
+                                                                      "field":  "tabs[].tabContent",
+                                                                      "type":  "RichText",
+                                                                      "note":  "Tab Content"
+                                                                  }
+                                                              ],
+                                                    "files":  [
+
+                                                              ]
+                                                },
+                                         "opti":  {
+                                                      "model":  [
+                                                                    {
+                                                                        "field":  "Tabs",
+                                                                        "type":  "ContentArea list",
+                                                                        "note":  "Tabs"
+                                                                    },
+                                                                    {
+                                                                        "field":  "Tabs[].TabTitle",
+                                                                        "type":  "string",
+                                                                        "note":  "Tab Title"
+                                                                    },
+                                                                    {
+                                                                        "field":  "Tabs[].TabContent",
+                                                                        "type":  "XhtmlString",
+                                                                        "note":  "Tab Content"
+                                                                    }
+                                                                ],
+                                                      "files":  [
+
+                                                                ]
+                                                  }
+                                     }
+             }
+}

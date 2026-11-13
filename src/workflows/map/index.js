@@ -8,7 +8,6 @@
 import { esc } from '../../lib/dom.js';
 import { items } from '../../lib/text.js';
 import { cmsOptions, val } from '../../ui/form.js';
-import { demo } from './demo.js';
 import { render } from './render.js';
 
 const defaults = {
@@ -75,6 +74,5 @@ export default {
     return '';
   },
 
-  demo,
   render
 };

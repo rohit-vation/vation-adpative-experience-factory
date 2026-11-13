@@ -1,0 +1,8 @@
+﻿{
+    "input":  {
+                  "description":  "Create a link list using a composite multifield named links. Each item has link label and a page path/link URL. Render an accessible list of links and skip incomplete items. Component group: special-components. Clientlib category: AEMGeeks.components.linkList.",
+                  "name":  "Demo Link List",
+                  "cms":  "aem"
+              },
+    "workflow":  "create"
+}

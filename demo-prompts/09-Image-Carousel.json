@@ -1,0 +1,8 @@
+﻿{
+    "input":  {
+                  "description":  "Create an image carousel using a composite multifield named slides. Each slide has image path, alt text, title and caption. Add previous/next controls, slide indicators, keyboard support and responsive styling. Component group: special-components. Clientlib category: AEMGeeks.components.imageCarousel.",
+                  "name":  "Demo Image Carousel",
+                  "cms":  "aem"
+              },
+    "workflow":  "create"
+}

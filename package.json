@@ -2,12 +2,14 @@
   "name": "adaptive-experience-factory",
   "version": "0.1.0",
   "private": true,
-  "description": "Demo workspace for building, mapping, auditing and migrating CMS experiences.",
+  "description": "Adaptive Experience Factory: API-backed CMS component generation, connections and reviewed repository operations.",
   "type": "module",
   "scripts": {
     "start": "node server/server.js",
-    "test": "node scripts/smoke-test.js && node scripts/ai-test.js",
-    "mock": "node scripts/mock-gemini.js"
+    "test": "node scripts/smoke-test.js && node scripts/ai-test.js && node scripts/aem-forge-test.js && node scripts/live-component-test.js",
+    "check": "node --check server/server.js && node --check server/aem-forge.js && node --check server/aem-client.js && node --check server/connection-vault.js && node --check server/logger.js && node --check server/server-utils.js && node --check src/main.js && node --check src/ai/ai-client.js && node --check src/ai/prompts.js && node --check src/ai/validate.js && node --check src/ai/system-prompt.js && node --check src/ui/connections.js && node --check src/ui/live-implementation-template.js && node --check src/ui/live-implementation.js && node --check src/ui/log-panel.js && node --check src/aem/instance-only-plan.js && node --check src/services/aem-generation-repair.js && node --check src/services/generate.js && node --check src/services/eds-generation.js && node --check src/workflows/index.js && node --check src/workflows/create/index.js && node --check src/workflows/map/index.js && node --check src/workflows/audit/index.js && node --check src/workflows/migrate/index.js && node --check src/workflows/design-to-aem/index.js && node --check src/workflows/design-to-aem/render.js && node --check src/workflows/audit/checks.js && node --check src/data/implementations/aem.js && node --check scripts/smoke-test.js && node --check scripts/ai-test.js && node --check scripts/aem-forge-test.js && node --check scripts/live-component-test.js && node --check scripts/test-support/gemini-mock.js && node --check scripts/test-support/response-fixtures.js"
   },
-  "engines": { "node": ">=18" }
+  "engines": {
+    "node": ">=18"
+  }
 }

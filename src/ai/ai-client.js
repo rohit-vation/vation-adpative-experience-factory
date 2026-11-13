@@ -20,7 +20,9 @@ export const aiState = {
   provider: '',    // chosen provider id
   model: '',       // chosen model name
   models: [],      // names offered for the chosen provider
-  live: false      // true when `models` came from the provider itself
+  live: false,     // true when `models` came from the provider itself
+  providerError: '',
+  providerErrorStatus: null,
 };
 
 export const currentProvider = () => aiState.providers.find((p) => p.id === aiState.provider);
@@ -46,6 +48,8 @@ export async function loadAiStatus() {
 
     aiState.providers = Array.isArray(status.providers) ? status.providers : [];
     aiState.enabled = Boolean(status.ai) && aiState.providers.some((p) => p.configured);
+    aiState.providerError = '';
+    aiState.providerErrorStatus = null;
 
     if (aiState.enabled) {
       const saved = savedChoice();
@@ -57,7 +61,6 @@ export async function loadAiStatus() {
       await loadModels(provider.id);
     }
   } catch (err) {
-    // Static hosting or no server: stay in demo mode
     aiState.enabled = false;
   }
   return aiState;
@@ -69,16 +72,27 @@ export async function loadModels(id) {
   if (!provider) return;
   aiState.models = provider.models;
   aiState.live = false;
+  aiState.providerError = '';
+  aiState.providerErrorStatus = null;
   try {
     const response = await fetch(`/api/models?provider=${encodeURIComponent(id)}`, { cache: 'no-store' });
-    if (response.ok) {
-      const body = await response.json();
-      if (Array.isArray(body.models) && body.models.length && aiState.provider === id) {
-        aiState.models = body.models;
-        aiState.live = Boolean(body.live);
-      }
+    const body = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      aiState.providerError = body.error || `Unable to validate ${provider.label} API access (HTTP ${response.status}).`;
+      aiState.providerErrorStatus = response.status;
+      return;
     }
-  } catch (err) { /* keep the suggestions */ }
+    if (aiState.provider !== id) return;
+    if (Array.isArray(body.models) && body.models.length) {
+      aiState.models = body.models;
+      aiState.live = Boolean(body.live);
+    }
+    aiState.providerError = typeof body.error === 'string' ? body.error : '';
+    aiState.providerErrorStatus = Number.isFinite(Number(body.errorStatus)) ? Number(body.errorStatus) || null : null;
+  } catch (err) {
+    aiState.providerError = err.message || `Unable to validate ${provider.label} API access.`;
+    aiState.providerErrorStatus = null;
+  }
 }
 
 export async function setProvider(id) {

@@ -5,7 +5,7 @@
  * screen is re-rendered. Generic handlers (tabs, copy buttons) are handled
  * here. Workflow-specific ones are optional hooks on the workflow object:
  *
- *   workflow.onClick(target)   e.g. the desktop/mobile preview switch
+ *   workflow.onClick(target)   e.g. a workflow-specific action
  *   workflow.onChange(target)  e.g. the website/component switch in Audit
  */
 

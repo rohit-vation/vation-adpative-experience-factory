@@ -1,0 +1,8 @@
+﻿{
+    "input":  {
+                  "description":  "Create a responsive hero component with a title, description, background image, optional CTA label and CTA link. Keep the CTA hidden when its label or link is empty. Component group: special-components. Clientlib category: AEMGeeks.components.demoHero.",
+                  "name":  "Demo Hero",
+                  "cms":  "aem"
+              },
+    "workflow":  "create"
+}

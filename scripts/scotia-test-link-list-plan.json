@@ -1,0 +1,138 @@
+{
+  "targetId": "connector-29a17ab3-ebfd-494c-ac41-4ffdfeff49b4",
+  "confirmWrites": true,
+  "operations": [
+    {
+      "type": "node",
+      "path": "/apps/scotia/components/content/scotiaTestLinkList",
+      "primaryType": "cq:Component",
+      "properties": {
+        "jcr:title": "Scotia Test Link List",
+        "componentGroup": "Content"
+      }
+    },
+    {
+      "type": "node",
+      "path": "/apps/scotia/components/content/scotiaTestLinkList/cq:dialog",
+      "primaryType": "nt:unstructured",
+      "properties": {
+        "sling:resourceType": "cq/gui/components/authoring/dialog",
+        "jcr:title": "Scotia Test Link List"
+      }
+    },
+    {
+      "type": "node",
+      "path": "/apps/scotia/components/content/scotiaTestLinkList/cq:dialog/content",
+      "primaryType": "nt:unstructured",
+      "properties": {
+        "sling:resourceType": "granite/ui/components/coral/foundation/container"
+      }
+    },
+    {
+      "type": "node",
+      "path": "/apps/scotia/components/content/scotiaTestLinkList/cq:dialog/content/items",
+      "primaryType": "nt:unstructured",
+      "properties": {}
+    },
+    {
+      "type": "node",
+      "path": "/apps/scotia/components/content/scotiaTestLinkList/cq:dialog/content/items/links",
+      "primaryType": "nt:unstructured",
+      "properties": {
+        "sling:resourceType": "granite/ui/components/coral/foundation/form/multifield",
+        "fieldLabel": "Link items",
+        "composite": true
+      }
+    },
+    {
+      "type": "node",
+      "path": "/apps/scotia/components/content/scotiaTestLinkList/cq:dialog/content/items/links/field",
+      "primaryType": "nt:unstructured",
+      "properties": {
+        "sling:resourceType": "granite/ui/components/coral/foundation/container",
+        "name": "./links"
+      }
+    },
+    {
+      "type": "node",
+      "path": "/apps/scotia/components/content/scotiaTestLinkList/cq:dialog/content/items/links/field/items",
+      "primaryType": "nt:unstructured",
+      "properties": {}
+    },
+    {
+      "type": "node",
+      "path": "/apps/scotia/components/content/scotiaTestLinkList/cq:dialog/content/items/links/field/items/label",
+      "primaryType": "nt:unstructured",
+      "properties": {
+        "sling:resourceType": "granite/ui/components/coral/foundation/form/textfield",
+        "fieldLabel": "Link label",
+        "name": "label",
+        "required": true
+      }
+    },
+    {
+      "type": "node",
+      "path": "/apps/scotia/components/content/scotiaTestLinkList/cq:dialog/content/items/links/field/items/url",
+      "primaryType": "nt:unstructured",
+      "properties": {
+        "sling:resourceType": "granite/ui/components/coral/foundation/form/pathfield",
+        "fieldLabel": "Link URL",
+        "name": "url",
+        "rootPath": "/content",
+        "required": true
+      }
+    },
+    {
+      "type": "node",
+      "path": "/apps/scotia/components/content/scotiaTestLinkList/clientlib",
+      "primaryType": "cq:ClientLibraryFolder",
+      "properties": {
+        "categories": [
+          "scotia.components.scotiaTestLinkList"
+        ],
+        "allowProxy": true
+      }
+    },
+    {
+      "type": "file",
+      "path": "/apps/scotia/components/content/scotiaTestLinkList/scotiaTestLinkList.html",
+      "mimeType": "text/html",
+      "content": "<sly data-sly-use.clientlib=\"/libs/granite/sightly/templates/clientlib.html\"/>\n<sly data-sly-call=\"${clientlib.css @ categories='scotia.components.scotiaTestLinkList'}\"></sly>\n<nav class=\"cmp-scotia-test-link-list\" aria-label=\"Related links\"><ul><sly data-sly-list.group=\"${resource.children}\"><sly data-sly-test=\"${group.name == 'links'}\"><li data-sly-list.item=\"${group.children}\"><a href=\"${item.valueMap.url @ context='uri'}\">${item.valueMap.label}</a></li></sly></sly></ul></nav>"
+    },
+    {
+      "type": "file",
+      "path": "/apps/scotia/components/content/scotiaTestLinkList/clientlib/css.txt",
+      "mimeType": "text/plain",
+      "content": "#base=css\nscotiaTestLinkList.css\n"
+    },
+    {
+      "type": "file",
+      "path": "/apps/scotia/components/content/scotiaTestLinkList/clientlib/css/scotiaTestLinkList.css",
+      "mimeType": "text/css",
+      "content": ".cmp-scotia-test-link-list{margin-block:1rem}.cmp-scotia-test-link-list ul{margin:0;padding:0;list-style:none}.cmp-scotia-test-link-list li+li{margin-top:.5rem}.cmp-scotia-test-link-list a{color:var(--color-link,#005eb8)}"
+    },
+    {
+      "type": "node",
+      "path": "/content/scotia/us/en/home/jcr:content/root/container/scotiaTestLinkList",
+      "primaryType": "nt:unstructured",
+      "properties": {
+        "sling:resourceType": "scotia/components/content/scotiaTestLinkList"
+      }
+    },
+    {
+      "type": "node",
+      "path": "/content/scotia/us/en/home/jcr:content/root/container/scotiaTestLinkList/links",
+      "primaryType": "nt:unstructured",
+      "properties": {}
+    },
+    {
+      "type": "node",
+      "path": "/content/scotia/us/en/home/jcr:content/root/container/scotiaTestLinkList/links/item0",
+      "primaryType": "nt:unstructured",
+      "properties": {
+        "label": "Scotia home",
+        "url": "/content/scotia/us/en/home.html"
+      }
+    }
+  ]
+}

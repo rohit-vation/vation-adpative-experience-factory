@@ -1,0 +1,8 @@
+﻿{
+    "input":  {
+                  "description":  "Create tabs with a composite multifield named tabs. Each tab has a title and rich text content. Authors can add and reorder tabs. Render accessible tab buttons and panels; clicking and keyboard navigation switch the visible panel. Component group: special-components. Clientlib category: AEMGeeks.components.tabs.",
+                  "name":  "Demo Tabs",
+                  "cms":  "aem"
+              },
+    "workflow":  "create"
+}

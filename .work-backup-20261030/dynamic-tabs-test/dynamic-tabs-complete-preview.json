@@ -1,0 +1,199 @@
+{
+  "component": {
+    "name": "Dynamic Tabs",
+    "cms": "aem",
+    "summary": "A tabbed content component featuring a multifield-based authoring interface for managing tab titles and rich-text content, with full WAI-ARIA accessibility support and keyboard navigation."
+  },
+  "design": {
+    "a11y": [
+      "Use tablist, tab, and tabpanel roles",
+      "Sync aria-selected and aria-controls attributes",
+      "Keyboard navigation: Arrow keys, Home, and End",
+      "Maintain focus visibility"
+    ]
+  },
+  "ruleSuggestions": [],
+  "implementations": {
+    "aem": {
+      "model": [
+        {
+          "field": "tabs",
+          "type": "multifield",
+          "note": "Root composite container for tab items"
+        },
+        {
+          "field": "tabs[].title",
+          "type": "text",
+          "note": "Tab label"
+        },
+        {
+          "field": "tabs[].content",
+          "type": "richtext",
+          "note": "Tab panel content"
+        }
+      ],
+      "files": [
+        {
+          "name": "apps/site/components/dynamicTabs/.content.xml",
+          "lang": "xml",
+          "code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<jcr:root xmlns:cq=\"http://www.day.com/jcr/cq/1.0\" xmlns:jcr=\"http://www.jcp.org/jcr/1.0\" xmlns:sling=\"http://sling.apache.org/jcr/sling/1.0\"\n    jcr:primaryType=\"cq:Component\"\n    jcr:title=\"Dynamic Tabs\"\n    componentGroup=\"special-components\"/>"
+        },
+        {
+          "name": "apps/site/components/dynamicTabs/_cq_dialog/.content.xml",
+          "lang": "xml",
+          "code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<jcr:root xmlns:sling=\"http://sling.apache.org/jcr/sling/1.0\"\n    xmlns:cq=\"http://www.day.com/jcr/cq/1.0\"\n    xmlns:jcr=\"http://www.jcp.org/jcr/1.0\"\n    xmlns:nt=\"http://www.jcp.org/jcr/nt/1.0\"\n    jcr:primaryType=\"nt:unstructured\"\n    jcr:title=\"Dynamic Tabs\"\n    sling:resourceType=\"cq/gui/components/authoring/dialog\">\n  <content jcr:primaryType=\"nt:unstructured\" sling:resourceType=\"granite/ui/components/coral/foundation/container\">\n    <items jcr:primaryType=\"nt:unstructured\">\n      <tabs jcr:primaryType=\"nt:unstructured\" sling:resourceType=\"granite/ui/components/coral/foundation/form/multifield\" fieldLabel=\"Tabs\" composite=\"{Boolean}true\" required=\"{Boolean}true\">\n        <field jcr:primaryType=\"nt:unstructured\" sling:resourceType=\"granite/ui/components/coral/foundation/container\" name=\"./tabs\">\n          <items jcr:primaryType=\"nt:unstructured\">\n              <title jcr:primaryType=\"nt:unstructured\" sling:resourceType=\"granite/ui/components/coral/foundation/form/textfield\" fieldLabel=\"Tab Title\" name=\"title\" required=\"{Boolean}true\"/>\n              <content jcr:primaryType=\"nt:unstructured\" sling:resourceType=\"cq/gui/components/authoring/dialog/richtext\" fieldLabel=\"Content\" name=\"content\" required=\"{Boolean}true\" useFixedInlineToolbar=\"{Boolean}true\"/>\n          </items>\n        </field>\n      </tabs>\n    </items>\n  </content>\n</jcr:root>"
+        },
+        {
+          "name": "apps/site/components/dynamicTabs/dynamicTabs.html",
+          "lang": "htl",
+          "code": "<sly data-sly-use.clientlib=\"/libs/granite/sightly/templates/clientlib.html\"/>\n<sly />\n<sly />\n<sly data-sly-use.model=\"com.example.site.core.models.DynamicTabsModel\"/>\n<sly data-sly-call=\"${clientlib.css @ categories='site.components.dynamicTabs'}\"></sly>\n<sly data-sly-call=\"${clientlib.js @ categories='site.components.dynamicTabs'}\"></sly>\n<div class=\"cmp-dynamic-tabs\" data-cmp-is=\"tabs\" data-sly-test=\"${model.tabs}\">\n  <div class=\"cmp-dynamic-tabs__tablist\" role=\"tablist\" aria-label=\"Content tabs\">\n    <sly data-sly-list.tab=\"${model.tabs}\">\n      <button type=\"button\" class=\"cmp-dynamic-tabs__tab\" role=\"tab\" id=\"${resource.path}-tab-${tabList.index}\" aria-controls=\"${resource.path}-panel-${tabList.index}\" aria-selected=\"${tabList.first ? 'true' : 'false'}\" tabindex=\"${tabList.first ? '0' : '-1'}\">${tab.valueMap.title}</button>\n    </sly>\n  </div>\n  <div class=\"cmp-dynamic-tabs__panels\">\n    <sly data-sly-list.tab=\"${model.tabs}\">\n      <section class=\"cmp-dynamic-tabs__tabpanel\" role=\"tabpanel\" id=\"${resource.path}-panel-${tabList.index}\" aria-labelledby=\"${resource.path}-tab-${tabList.index}\" tabindex=\"0\" data-sly-attribute.hidden=\"${!tabList.first}\">\n        <div class=\"cmp-dynamic-tabs__panel-content\">${tab.valueMap.content @ context='html'}</div>\n      </section>\n    </sly>\n  </div>\n</div>"
+        },
+        {
+          "name": "core/models/DynamicTabsModel.java",
+          "lang": "java",
+          "code": "package com.example.site.core.models;\n\nimport java.util.List;\nimport org.apache.sling.api.SlingHttpServletRequest;\nimport org.apache.sling.api.resource.Resource;\nimport org.apache.sling.models.annotations.DefaultInjectionStrategy;\nimport org.apache.sling.models.annotations.Model;\nimport org.apache.sling.models.annotations.injectorspecific.ValueMapValue;\nimport org.apache.sling.models.annotations.injectorspecific.ChildResource;\n\n@Model(adaptables = SlingHttpServletRequest.class, defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL)\npublic class DynamicTabsModel {\n\n    @ChildResource(name = \"tabs\")\n    private List<Resource> tabs;\n\n    public String getId() { return \"dynamicTabs-\" + Math.abs(hashCode()); }\n    public List<Resource> getTabs() { return tabs; }\n}"
+        },
+        {
+          "name": "apps/site/components/dynamicTabs/component.json",
+          "lang": "json",
+          "code": "{\n  \"component\": {\n    \"name\": \"Dynamic Tabs\",\n    \"resourceType\": \"site/components/dynamicTabs\",\n    \"group\": \"special-components\"\n  },\n  \"fields\": [\n    {\n      \"name\": \"tabs\",\n      \"label\": \"Tabs\",\n      \"type\": \"multifield\",\n      \"required\": true,\n      \"role\": \"other\",\n      \"options\": [],\n      \"rootPath\": \"\",\n      \"composite\": true,\n      \"minItems\": 0,\n      \"maxItems\": 20,\n      \"defaultValue\": \"\",\n      \"description\": \"\",\n      \"children\": [\n        {\n          \"name\": \"title\",\n          \"label\": \"Tab Title\",\n          \"type\": \"text\",\n          \"required\": true,\n          \"role\": \"title\",\n          \"options\": [],\n          \"rootPath\": \"\",\n          \"composite\": false,\n          \"minItems\": 0,\n          \"maxItems\": 20,\n          \"defaultValue\": \"\",\n          \"description\": \"\"\n        },\n        {\n          \"name\": \"content\",\n          \"label\": \"Content\",\n          \"type\": \"richtext\",\n          \"required\": true,\n          \"role\": \"body\",\n          \"options\": [],\n          \"rootPath\": \"\",\n          \"composite\": false,\n          \"minItems\": 0,\n          \"maxItems\": 20,\n          \"defaultValue\": \"\",\n          \"description\": \"\"\n        }\n      ]\n    }\n  ]\n}\n"
+        },
+        {
+          "name": "apps/site/components/dynamicTabs/clientlib/.content.xml",
+          "lang": "xml",
+          "code": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<jcr:root xmlns:jcr=\"http://www.jcp.org/jcr/1.0\"\n    jcr:primaryType=\"cq:ClientLibraryFolder\"\n    categories=\"[site.components.dynamicTabs]\"\n    allowProxy=\"{Boolean}true\"/>"
+        },
+        {
+          "name": "apps/site/components/dynamicTabs/clientlib/css.txt",
+          "lang": "txt",
+          "code": "#base=css\ndynamicTabs.css\n"
+        },
+        {
+          "name": "apps/site/components/dynamicTabs/clientlib/css/dynamicTabs.css",
+          "lang": "css",
+          "code": ".cmp-dynamic-tabs { width: 100%; }\n.cmp-dynamic-tabs__tablist { display: flex; flex-wrap: wrap; gap: var(--tabs-gap, 0.5rem); margin: 0; padding: 0; border-bottom: 1px solid var(--tabs-border-color, currentColor); }\n.cmp-dynamic-tabs__tab { appearance: none; border: 0; border-bottom: 3px solid transparent; margin: 0 0 -1px; padding: 0.75rem 1rem; background: transparent; color: inherit; font: inherit; cursor: pointer; }\n.cmp-dynamic-tabs__tab[aria-selected=\"true\"] { border-bottom-color: var(--tabs-active-color, currentColor); font-weight: 700; }\n.cmp-dynamic-tabs__tab:focus-visible, .cmp-dynamic-tabs__tabpanel:focus-visible { outline: 2px solid var(--tabs-focus-color, currentColor); outline-offset: 3px; }\n.cmp-dynamic-tabs__tabpanel[hidden] { display: none !important; }\n.cmp-dynamic-tabs__tabpanel { padding: 1rem 0; }\n@media (max-width: 40rem) { .cmp-dynamic-tabs__tablist { flex-wrap: nowrap; overflow-x: auto; } .cmp-dynamic-tabs__tab { flex: 0 0 auto; } }"
+        },
+        {
+          "name": "apps/site/components/dynamicTabs/clientlib/js.txt",
+          "lang": "txt",
+          "code": "#base=js\ndynamicTabs.js\n"
+        },
+        {
+          "name": "apps/site/components/dynamicTabs/clientlib/js/dynamicTabs.js",
+          "lang": "js",
+          "code": "(function () {\n  'use strict';\n  var selector = '[data-cmp-is=\"tabs\"]';\n  function owned(root, childSelector) {\n    return Array.prototype.filter.call(root.querySelectorAll(childSelector), function (node) {\n      return node.closest(selector) === root;\n    });\n  }\n  function initialize(root) {\n    if (root.getAttribute(\"data-tabs-initialized\") === \"true\") return;\n    root.setAttribute(\"data-tabs-initialized\", \"true\");\n    var tabs = owned(root, '[role=\"tab\"]');\n    var panels = owned(root, '[role=\"tabpanel\"]');\n    if (!tabs.length || !panels.length) return;\n    function activate(tab, moveFocus) {\n      var panelId = tab.getAttribute(\"aria-controls\");\n      tabs.forEach(function (item) {\n        var selected = item === tab;\n        item.setAttribute(\"aria-selected\", selected ? \"true\" : \"false\");\n        item.tabIndex = selected ? 0 : -1;\n      });\n      panels.forEach(function (panel) { panel.hidden = panel.id !== panelId; });\n      if (moveFocus) tab.focus();\n    }\n    tabs.forEach(function (tab, index) {\n      tab.addEventListener(\"click\", function () { activate(tab, false); });\n      tab.addEventListener(\"keydown\", function (event) {\n        var next = index;\n        if (event.key === \"ArrowRight\") next = (index + 1) % tabs.length;\n        else if (event.key === \"ArrowLeft\") next = (index - 1 + tabs.length) % tabs.length;\n        else if (event.key === \"Home\") next = 0;\n        else if (event.key === \"End\") next = tabs.length - 1;\n        else return;\n        event.preventDefault();\n        activate(tabs[next], true);\n      });\n    });\n    var initiallySelected = tabs.find(function (tab) { return tab.getAttribute(\"aria-selected\") === \"true\"; }) || tabs[0];\n    activate(initiallySelected, false);\n  }\n  function initializeAll() { document.querySelectorAll(selector).forEach(initialize); }\n  if (document.readyState === \"loading\") document.addEventListener(\"DOMContentLoaded\", initializeAll);\n  else initializeAll();\n})();"
+        }
+      ],
+      "fields": [
+        {
+          "name": "tabs",
+          "label": "Tabs",
+          "type": "multifield",
+          "required": true,
+          "role": "other",
+          "options": [],
+          "rootPath": "",
+          "composite": true,
+          "minItems": 0,
+          "maxItems": 20,
+          "defaultValue": "",
+          "description": "",
+          "children": [
+            {
+              "name": "title",
+              "label": "Tab Title",
+              "type": "text",
+              "required": true,
+              "role": "title",
+              "options": [],
+              "rootPath": "",
+              "composite": false,
+              "minItems": 0,
+              "maxItems": 20,
+              "defaultValue": "",
+              "description": ""
+            },
+            {
+              "name": "content",
+              "label": "Content",
+              "type": "richtext",
+              "required": true,
+              "role": "body",
+              "options": [],
+              "rootPath": "",
+              "composite": false,
+              "minItems": 0,
+              "maxItems": 20,
+              "defaultValue": "",
+              "description": ""
+            }
+          ]
+        }
+      ],
+      "componentGroup": "special-components",
+      "proxyComponent": false,
+      "resourceSuperType": "",
+      "directJcrHtl": "<sly data-sly-use.clientlib=\"/libs/granite/sightly/templates/clientlib.html\"/>\n<sly data-sly-call=\"${clientlib.css @ categories='site.components.dynamicTabs'}\"></sly>\n<sly data-sly-call=\"${clientlib.js @ categories='site.components.dynamicTabs'}\"></sly>\n<sly data-sly-list.tabsGroup=\"${resource.children}\">\n  <sly data-sly-test=\"${tabsGroup.name == 'tabs'}\">\n    <div class=\"cmp-dynamic-tabs\" data-cmp-is=\"tabs\">\n      <div class=\"cmp-dynamic-tabs__tablist\" role=\"tablist\" aria-label=\"Content tabs\">\n        <sly data-sly-list.tab=\"${tabsGroup.children}\">\n          <button type=\"button\" class=\"cmp-dynamic-tabs__tab\" role=\"tab\" id=\"${resource.path}-tab-${tabList.index}\" aria-controls=\"${resource.path}-panel-${tabList.index}\" aria-selected=\"${tabList.first ? 'true' : 'false'}\" tabindex=\"${tabList.first ? '0' : '-1'}\">${tab.valueMap.title}</button>\n        </sly>\n      </div>\n      <div class=\"cmp-dynamic-tabs__panels\">\n        <sly data-sly-list.panelTab=\"${tabsGroup.children}\">\n          <section class=\"cmp-dynamic-tabs__tabpanel\" role=\"tabpanel\" id=\"${resource.path}-panel-${panelTabList.index}\" aria-labelledby=\"${resource.path}-tab-${panelTabList.index}\" tabindex=\"0\" data-sly-attribute.hidden=\"${!panelTabList.first}\">\n            <div class=\"cmp-dynamic-tabs__panel-content\">${panelTab.valueMap.content @ context='html'}</div>\n          </section>\n        </sly>\n      </div>\n    </div>\n  </sly>\n</sly>"
+    },
+    "eds": {
+      "model": [
+        {
+          "field": "tabs",
+          "type": "Array of objects",
+          "note": "Tabs"
+        },
+        {
+          "field": "tabs[].title",
+          "type": "text",
+          "note": "Tab Title"
+        },
+        {
+          "field": "tabs[].content",
+          "type": "richtext",
+          "note": "Content"
+        }
+      ],
+      "files": []
+    },
+    "cf": {
+      "model": [
+        {
+          "field": "tabs",
+          "type": "Array of objects",
+          "note": "Tabs"
+        },
+        {
+          "field": "tabs[].title",
+          "type": "Symbol",
+          "note": "Tab Title"
+        },
+        {
+          "field": "tabs[].content",
+          "type": "RichText",
+          "note": "Content"
+        }
+      ],
+      "files": []
+    },
+    "opti": {
+      "model": [
+        {
+          "field": "Tabs",
+          "type": "ContentArea list",
+          "note": "Tabs"
+        },
+        {
+          "field": "Tabs[].Title",
+          "type": "string",
+          "note": "Tab Title"
+        },
+        {
+          "field": "Tabs[].Content",
+          "type": "XhtmlString",
+          "note": "Content"
+        }
+      ],
+      "files": []
+    }
+  }
+}

@@ -1,0 +1,8 @@
+﻿{
+    "input":  {
+                  "description":  "Create a reusable card with image, title, description, and optional link. The image should have authored alt text and the link should be hidden when empty. Component group: special-components. Clientlib category: AEMGeeks.components.demoCard.",
+                  "name":  "Demo Card",
+                  "cms":  "aem"
+              },
+    "workflow":  "create"
+}

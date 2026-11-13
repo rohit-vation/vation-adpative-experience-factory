@@ -16,6 +16,10 @@ import { workflowHTML, loadingHTML, errorHTML } from './views/workflow.js';
 import { bindGlobalEvents } from './ui/events.js';
 import { aiState, loadAiStatus, providerLabel } from './ai/ai-client.js';
 import { renderAiPicker } from './ui/ai-picker.js';
+import { initLogPanel } from './ui/log-panel.js';
+import { initConnections } from './ui/connections.js';
+import { reportBrowserLog } from './ui/log-panel.js';
+import { initCreateLiveImplementation, mountCreateLiveImplementationScreen, setCreateLiveContext, createLiveInputProblem, setCreateGenerateBusy, refreshCreateLiveGenerateButton } from './ui/live-implementation.js';
 
 const app = $('#app');
 
@@ -29,6 +33,8 @@ const hashId = () => (location.hash || '').replace('#', '');
 function showScreen(id) {
   currentId = WORKFLOWS[id] ? id : null;
   app.innerHTML = currentId ? workflowHTML(WORKFLOWS[currentId]) : homeHTML();
+  if (currentId === 'create') mountCreateLiveImplementationScreen();
+  if (currentId && WORKFLOWS[currentId]?.onMount) WORKFLOWS[currentId].onMount();
   window.scrollTo(0, 0);
 
   // Keep the URL hash in step so a screen can be linked to. Optional, so errors are ignored.
@@ -55,16 +61,20 @@ async function submit(event) {
   const button = $('#go');
   const result = $('#result');
 
-  const problem = workflow.check(input);
+  const workflowProblem = workflow.check(input);
+  const liveProblem = id === 'create' ? createLiveInputProblem(input.cms) : '';
+  const problem = workflowProblem || liveProblem;
   errorEl.hidden = !problem;
   errorEl.textContent = problem;
   if (problem) return;
 
   button.disabled = true;
+  if (id === 'create') setCreateGenerateBusy(true);
   button.textContent = 'Generating';
-  result.innerHTML = loadingHTML();
 
   try {
+    button.textContent = 'Generating';
+    result.innerHTML = loadingHTML();
     const data = await generate(workflow, input, (step) => {
       const stepEl = $('#step');
       if (stepEl) stepEl.textContent = step;
@@ -73,6 +83,7 @@ async function submit(event) {
     if (currentId !== id) return; // person left this screen while waiting
 
     result.innerHTML = workflow.render(data, input);
+    if (id === 'create') await setCreateLiveContext(data, input);
 
     // On narrow screens the result sits below the form, so bring it into view.
     if (window.innerWidth < 900) {
@@ -81,12 +92,18 @@ async function submit(event) {
     }
   } catch (err) {
     console.error(err);
+    reportBrowserLog('ERROR', 'workflow', 'Workflow failed.', { message: err?.message || 'Unknown workflow error' });
     result.innerHTML = errorHTML(err.message);
   } finally {
     const goButton = $('#go');
     if (goButton) {
-      goButton.disabled = false;
       goButton.textContent = 'Generate';
+      if (id === 'create') {
+        setCreateGenerateBusy(false);
+        refreshCreateLiveGenerateButton();
+      } else {
+        goButton.disabled = false;
+      }
     }
   }
 }
@@ -97,25 +114,44 @@ function showAiStatus() {
   const pill = $('#ai-pill');
   const note = $('#note-text');
   const dot = $('#note-dot');
-
   renderAiPicker(showAiStatus);
-
-  if (aiState.enabled) {
-    pill.hidden = true; // the picker in the header says which AI is in use
-    note.textContent = `Results are generated live by ${providerLabel()} (${aiState.model}). Review generated code before you use it.`;
-    dot.style.background = 'var(--good)';
-  } else {
-    pill.hidden = false;
-    pill.className = 'pill outline';
-    pill.textContent = 'AI: off';
-    note.textContent = 'Demo mode: every result is sample data. Add an API key (GEMINI_API_KEY or OPENAI_API_KEY) to .env to switch on live AI.';
-    dot.style.background = '';
+  const provider = aiState.providers.find((item) => item.id === aiState.provider && item.configured)
+    || aiState.providers.find((item) => item.configured);
+  pill.hidden = false;
+  pill.className = 'pill outline';
+  if (!provider) {
+    pill.textContent = 'API key required';
+    note.textContent = aiState.statusError || 'AI generation requires GEMINI_API_KEY or OPENAI_API_KEY in the server .env.';
+    dot.style.background = 'var(--bad)';
+    return;
   }
+  if (aiState.providerError) {
+    const suffix = aiState.providerErrorStatus ? ' (HTTP ' + aiState.providerErrorStatus + ')' : '';
+    pill.textContent = 'API key error' + suffix;
+    note.textContent = provider.label + ' could not verify the configured API key: ' + aiState.providerError + ' Replace the provider key in the server .env with an active key.';
+    dot.style.background = 'var(--bad)';
+    return;
+  }
+  if (!aiState.enabled) {
+    pill.textContent = 'API unavailable';
+    note.textContent = aiState.statusError || 'The provider API is unavailable. Restore the server/provider connection before generating.';
+    dot.style.background = 'var(--bad)';
+    return;
+  }
+  pill.hidden = true;
+  note.textContent = 'AI API configured: ' + provider.label + ' - ' + aiState.model + '. Requests use the provider API and may incur charges.';
+  dot.style.background = 'var(--good)';
 }
 
 /* ---------------- Boot ---------------- */
 
 $('#logo').innerHTML = icon('layers', 22);
+
+// AEM Forge functionality is additive: existing AEF workflows remain untouched.
+initLogPanel();
+initConnections();
+initCreateLiveImplementation();
+
 
 bindGlobalEvents({
   openWorkflow: showScreen,
@@ -127,3 +163,4 @@ bindGlobalEvents({
 
 showScreen(hashId() || null);
 loadAiStatus().then(showAiStatus);
+

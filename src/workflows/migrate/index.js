@@ -7,11 +7,10 @@
 
 import { esc } from '../../lib/dom.js';
 import { cmsOptions, val } from '../../ui/form.js';
-import { demo } from './demo.js';
 import { render } from './render.js';
 
 const defaults = {
-  url: 'https://www.nokia.com',
+  url: 'https://example.com',
   target: 'eds'
 };
 
@@ -56,6 +55,5 @@ export default {
 
   check: (input) => (!input.url.trim() ? 'Enter the website URL.' : ''),
 
-  demo,
   render
 };

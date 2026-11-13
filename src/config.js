@@ -14,5 +14,3 @@ export const CMS = {
 /** Display order for every CMS list in the UI. */
 export const CMS_IDS = ['aem', 'eds', 'cf', 'opti'];
 
-/** How long each fake "progress step" is shown in demo mode (ms). */
-export const DEMO_STEP_DELAY = 380;

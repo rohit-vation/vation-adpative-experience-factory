@@ -1,0 +1,8 @@
+﻿{
+    "input":  {
+                  "description":  "Create navigation using a nested composite multifield named items. Each item has label and URL plus a nested composite multifield named children containing child label and URL. Authors can add multiple parent links and multiple child links per parent. Render nested lists with accessible markup. Component group: special-components. Clientlib category: AEMGeeks.components.nestedNavigation.",
+                  "name":  "Demo Nested Navigation",
+                  "cms":  "aem"
+              },
+    "workflow":  "create"
+}

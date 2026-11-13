@@ -1,5 +1,11 @@
 node_modules/
 .env
+.env.*
+!.env.example
 .DS_Store
 .idea/
-.vercel/
+.aef-backups/
+.aef-connections/
+logs/
+personalize.removed/
+*.old

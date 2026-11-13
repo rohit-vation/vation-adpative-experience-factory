@@ -1,0 +1,156 @@
+{
+  "targetId": "connector-29a17ab3-ebfd-494c-ac41-4ffdfeff49b4",
+  "componentRoot": "/apps/scotia/components/content/dynamicTabs",
+  "plan": {
+    "mode": "instance-only",
+    "title": "Dynamic Tabs - direct AEM implementation",
+    "summary": "Create the Dynamic Tabs component in the Scotia AEM Author repository using model-free HTL and a composite multifield. Converted 15 repository operation(s) from unambiguous FileVault paths; source/build-only files are not deployed.",
+    "steps": [
+      "Verify the AEM Author connection and unused component path.",
+      "Create component metadata, composite multifield dialog, HTL and clientlib resources.",
+      "Read back repository resources and test dialog persistence and tab interaction."
+    ],
+    "repositoryOperations": [
+      {
+        "type": "node",
+        "path": "/apps/scotia/components/content/dynamicTabs",
+        "primaryType": "cq:Component",
+        "properties": {
+          "jcr:title": "Dynamic Tabs",
+          "componentGroup": "special-components"
+        }
+      },
+      {
+        "type": "node",
+        "path": "/apps/scotia/components/content/dynamicTabs/cq:dialog",
+        "primaryType": "nt:unstructured",
+        "properties": {
+          "jcr:title": "Dynamic Tabs",
+          "sling:resourceType": "cq/gui/components/authoring/dialog"
+        }
+      },
+      {
+        "type": "node",
+        "path": "/apps/scotia/components/content/dynamicTabs/cq:dialog/content",
+        "primaryType": "nt:unstructured",
+        "properties": {
+          "sling:resourceType": "granite/ui/components/coral/foundation/container"
+        }
+      },
+      {
+        "type": "node",
+        "path": "/apps/scotia/components/content/dynamicTabs/cq:dialog/content/items",
+        "primaryType": "nt:unstructured",
+        "properties": {}
+      },
+      {
+        "type": "node",
+        "path": "/apps/scotia/components/content/dynamicTabs/cq:dialog/content/items/tabs",
+        "primaryType": "nt:unstructured",
+        "properties": {
+          "sling:resourceType": "granite/ui/components/coral/foundation/form/multifield",
+          "fieldLabel": "Tabs",
+          "composite": true,
+          "required": true
+        }
+      },
+      {
+        "type": "node",
+        "path": "/apps/scotia/components/content/dynamicTabs/cq:dialog/content/items/tabs/field",
+        "primaryType": "nt:unstructured",
+        "properties": {
+          "sling:resourceType": "granite/ui/components/coral/foundation/container",
+          "name": "./tabs"
+        }
+      },
+      {
+        "type": "node",
+        "path": "/apps/scotia/components/content/dynamicTabs/cq:dialog/content/items/tabs/field/items",
+        "primaryType": "nt:unstructured",
+        "properties": {}
+      },
+      {
+        "type": "node",
+        "path": "/apps/scotia/components/content/dynamicTabs/cq:dialog/content/items/tabs/field/items/title",
+        "primaryType": "nt:unstructured",
+        "properties": {
+          "sling:resourceType": "granite/ui/components/coral/foundation/form/textfield",
+          "fieldLabel": "Tab Title",
+          "name": "title",
+          "required": true
+        }
+      },
+      {
+        "type": "node",
+        "path": "/apps/scotia/components/content/dynamicTabs/cq:dialog/content/items/tabs/field/items/content",
+        "primaryType": "nt:unstructured",
+        "properties": {
+          "sling:resourceType": "cq/gui/components/authoring/dialog/richtext",
+          "fieldLabel": "Content",
+          "name": "content",
+          "required": true,
+          "useFixedInlineToolbar": true
+        }
+      },
+      {
+        "type": "file",
+        "path": "/apps/scotia/components/content/dynamicTabs/dynamicTabs.html",
+        "mimeType": "text/html",
+        "content": "<sly data-sly-use.clientlib=\"/libs/granite/sightly/templates/clientlib.html\"/>\n<sly data-sly-call=\"${clientlib.css @ categories='scotia.components.dynamicTabs'}\"></sly>\n<sly data-sly-call=\"${clientlib.js @ categories='scotia.components.dynamicTabs'}\"></sly>\n<sly data-sly-list.tabsGroup=\"${resource.children}\">\n  <sly data-sly-test=\"${tabsGroup.name == 'tabs'}\">\n    <div class=\"cmp-dynamic-tabs\" data-cmp-is=\"tabs\">\n      <div class=\"cmp-dynamic-tabs__tablist\" role=\"tablist\" aria-label=\"Content tabs\">\n        <sly data-sly-list.tab=\"${tabsGroup.children}\">\n          <button type=\"button\" class=\"cmp-dynamic-tabs__tab\" role=\"tab\" id=\"${resource.path}-tab-${tabList.index}\" aria-controls=\"${resource.path}-panel-${tabList.index}\" aria-selected=\"${tabList.first ? 'true' : 'false'}\" tabindex=\"${tabList.first ? '0' : '-1'}\">${tab.valueMap.title}</button>\n        </sly>\n      </div>\n      <div class=\"cmp-dynamic-tabs__panels\">\n        <sly data-sly-list.panelTab=\"${tabsGroup.children}\">\n          <section class=\"cmp-dynamic-tabs__tabpanel\" role=\"tabpanel\" id=\"${resource.path}-panel-${panelTabList.index}\" aria-labelledby=\"${resource.path}-tab-${panelTabList.index}\" tabindex=\"0\" data-sly-attribute.hidden=\"${!panelTabList.first}\">\n            <div class=\"cmp-dynamic-tabs__panel-content\">${panelTab.valueMap.content @ context='html'}</div>\n          </section>\n        </sly>\n      </div>\n    </div>\n  </sly>\n</sly>"
+      },
+      {
+        "type": "node",
+        "path": "/apps/scotia/components/content/dynamicTabs/clientlib",
+        "primaryType": "cq:ClientLibraryFolder",
+        "properties": {
+          "categories": [
+            "scotia.components.dynamicTabs"
+          ],
+          "allowProxy": true
+        }
+      },
+      {
+        "type": "file",
+        "path": "/apps/scotia/components/content/dynamicTabs/clientlib/css.txt",
+        "mimeType": "text/plain",
+        "content": "#base=css\ndynamicTabs.css\n"
+      },
+      {
+        "type": "file",
+        "path": "/apps/scotia/components/content/dynamicTabs/clientlib/css/dynamicTabs.css",
+        "mimeType": "text/css",
+        "content": ".cmp-dynamic-tabs { width: 100%; }\n.cmp-dynamic-tabs__tablist { display: flex; flex-wrap: wrap; gap: var(--tabs-gap, 0.5rem); margin: 0; padding: 0; border-bottom: 1px solid var(--tabs-border-color, currentColor); }\n.cmp-dynamic-tabs__tab { appearance: none; border: 0; border-bottom: 3px solid transparent; margin: 0 0 -1px; padding: 0.75rem 1rem; background: transparent; color: inherit; font: inherit; cursor: pointer; }\n.cmp-dynamic-tabs__tab[aria-selected=\"true\"] { border-bottom-color: var(--tabs-active-color, currentColor); font-weight: 700; }\n.cmp-dynamic-tabs__tab:focus-visible, .cmp-dynamic-tabs__tabpanel:focus-visible { outline: 2px solid var(--tabs-focus-color, currentColor); outline-offset: 3px; }\n.cmp-dynamic-tabs__tabpanel[hidden] { display: none !important; }\n.cmp-dynamic-tabs__tabpanel { padding: 1rem 0; }\n@media (max-width: 40rem) { .cmp-dynamic-tabs__tablist { flex-wrap: nowrap; overflow-x: auto; } .cmp-dynamic-tabs__tab { flex: 0 0 auto; } }"
+      },
+      {
+        "type": "file",
+        "path": "/apps/scotia/components/content/dynamicTabs/clientlib/js.txt",
+        "mimeType": "text/plain",
+        "content": "#base=js\ndynamicTabs.js\n"
+      },
+      {
+        "type": "file",
+        "path": "/apps/scotia/components/content/dynamicTabs/clientlib/js/dynamicTabs.js",
+        "mimeType": "application/javascript",
+        "content": "(function () {\n  'use strict';\n  var selector = '[data-cmp-is=\"tabs\"]';\n  function owned(root, childSelector) {\n    return Array.prototype.filter.call(root.querySelectorAll(childSelector), function (node) {\n      return node.closest(selector) === root;\n    });\n  }\n  function initialize(root) {\n    if (root.getAttribute(\"data-tabs-initialized\") === \"true\") return;\n    root.setAttribute(\"data-tabs-initialized\", \"true\");\n    var tabs = owned(root, '[role=\"tab\"]');\n    var panels = owned(root, '[role=\"tabpanel\"]');\n    if (!tabs.length || !panels.length) return;\n    function activate(tab, moveFocus) {\n      var panelId = tab.getAttribute(\"aria-controls\");\n      tabs.forEach(function (item) {\n        var selected = item === tab;\n        item.setAttribute(\"aria-selected\", selected ? \"true\" : \"false\");\n        item.tabIndex = selected ? 0 : -1;\n      });\n      panels.forEach(function (panel) { panel.hidden = panel.id !== panelId; });\n      if (moveFocus) tab.focus();\n    }\n    tabs.forEach(function (tab, index) {\n      tab.addEventListener(\"click\", function () { activate(tab, false); });\n      tab.addEventListener(\"keydown\", function (event) {\n        var next = index;\n        if (event.key === \"ArrowRight\") next = (index + 1) % tabs.length;\n        else if (event.key === \"ArrowLeft\") next = (index - 1 + tabs.length) % tabs.length;\n        else if (event.key === \"Home\") next = 0;\n        else if (event.key === \"End\") next = tabs.length - 1;\n        else return;\n        event.preventDefault();\n        activate(tabs[next], true);\n      });\n    });\n    var initiallySelected = tabs.find(function (tab) { return tab.getAttribute(\"aria-selected\") === \"true\"; }) || tabs[0];\n    activate(initiallySelected, false);\n  }\n  function initializeAll() { document.querySelectorAll(selector).forEach(initialize); }\n  if (document.readyState === \"loading\") document.addEventListener(\"DOMContentLoaded\", initializeAll);\n  else initializeAll();\n})();"
+      }
+    ],
+    "assumptions": [
+      "Target is the connected local AEM 6.5 Author.",
+      "Component path /apps/scotia/components/content/dynamicTabs is unused.",
+      "Direct-JCR rendering uses model-free HTL; the Java Sling Model is source-preview only and is not deployed."
+    ],
+    "risks": [
+      "core/models/DynamicTabsModel.java: Java source is retained in the source preview; direct JCR writes do not compile or activate bundles.",
+      "apps/site/components/dynamicTabs/component.json: Codebase manifest only; not a JCR resource."
+    ],
+    "validationChecks": [
+      "Confirm componentGroup is special-components.",
+      "Confirm the dialog stores tabs as composite child resources with title/content properties.",
+      "Confirm HTL emits tablist, tab buttons and tabpanels.",
+      "Confirm CSS and JS clientlib category and indexes.",
+      "Test click and keyboard navigation on a page in AEM Author."
+    ],
+    "needsClarification": false,
+    "clarificationQuestions": []
+  }
+}

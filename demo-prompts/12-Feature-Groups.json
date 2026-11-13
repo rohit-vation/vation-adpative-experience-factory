@@ -1,0 +1,8 @@
+﻿{
+    "input":  {
+                  "description":  "Create feature groups using a composite multifield named groups. Each group has a heading and a nested composite multifield named features; each feature has title, description and optional icon path. Authors can add multiple groups and multiple features inside each group. Render responsive grouped cards. Component group: special-components. Clientlib category: AEMGeeks.components.featureGroups.",
+                  "name":  "Demo Feature Groups",
+                  "cms":  "aem"
+              },
+    "workflow":  "create"
+}

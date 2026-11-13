@@ -1,0 +1,8 @@
+﻿{
+    "input":  {
+                  "description":  "Create an accordion with a composite multifield named items. Authors can add multiple items; each item has a question text and answer rich text. Clicking a question shows or hides its answer; only one answer can be open. Component group: special-components. Clientlib category: AEMGeeks.components.accordion.",
+                  "name":  "Demo Accordion",
+                  "cms":  "aem"
+              },
+    "workflow":  "create"
+}

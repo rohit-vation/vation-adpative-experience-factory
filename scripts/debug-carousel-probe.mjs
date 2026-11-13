@@ -1,0 +1,11 @@
+import { aemFiles } from '../src/data/implementations/aem.js';
+const files = aemFiles('Image Carousel', [], 'Create an image carousel with a nested multifield of DAM image slides');
+console.log(files.map(file => file.name + ' (' + file.lang + ')').join('\n'));
+const html = files.find(file => file.lang === 'htl').code;
+const dialog = files.find(file => file.name.endsWith('_cq_dialog/.content.xml')).code;
+console.log('HAS_IMAGE_CAROUSEL', html.includes('data-cmp-is="image-carousel"'));
+console.log('HAS_COMPOSITE', dialog.includes('composite="{Boolean}true"'));
+console.log('HAS_CHILD_IMAGE', dialog.includes('name="./image"'));
+console.log('HAS_JS', files.some(file => file.name.endsWith('/clientlib/js/imageCarousel.js')));
+console.log('HAS_JS_INCLUDE', html.includes('clientlib.js'));
+console.log('HTL', html.slice(0,500));

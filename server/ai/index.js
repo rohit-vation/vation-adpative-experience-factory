@@ -14,6 +14,7 @@
  */
 
 import { AiError } from './errors.js';
+import { logger } from '../logger.js';
 import { PROVIDERS } from './providers/index.js';
 
 export { AiError };
@@ -30,21 +31,26 @@ const retryDelayMs = () => {
 
 /* ---------- Which provider and model ---------- */
 
-const configured = (p) => Boolean(p.config().key);
+// Provider API is the only runtime generation path. A configured key is required;
+// there is no per-session or environment toggle that silently falls back to demo data.
+const hasProviderKey = (provider) => Boolean(provider.config().key);
+const hasAnyProviderKey = () => Object.values(PROVIDERS).some(hasProviderKey);
+const apiEnabled = () => true;
+const configured = (provider) => hasProviderKey(provider);
 
 /** The provider used when the browser does not choose one. */
 function defaultProvider() {
   const wanted = PROVIDERS[process.env.AI_PROVIDER];
-  if (wanted && configured(wanted)) return wanted;
-  return Object.values(PROVIDERS).find(configured) || null;
+  if (wanted && hasProviderKey(wanted)) return wanted;
+  return Object.values(PROVIDERS).find(hasProviderKey) || null;
 }
 
 function resolveChoice(choice = {}) {
   const provider = choice.provider ? PROVIDERS[choice.provider] : defaultProvider();
-  if (!provider) throw new AiError(choice.provider ? 'Unknown AI provider.' : 'No AI key is set on the server.', choice.provider ? 400 : 503);
+  if (!provider) throw new AiError(choice.provider ? 'Unknown AI provider.' : 'No AI provider key is configured. Set GEMINI_API_KEY or OPENAI_API_KEY in the server .env before generating.', choice.provider ? 400 : 503);
 
   const cfg = provider.config();
-  if (!cfg.key) throw new AiError(`${provider.label} is not set up on the server. Add ${provider.keyEnv} to .env and restart.`, 400);
+  if (!cfg.key) throw new AiError(`${provider.label} API key is missing. Set ${provider.keyEnv} in the server .env before generating.`, 503);
 
   let model = cfg.model;
   if (choice.model !== undefined && choice.model !== '') {
@@ -66,7 +72,7 @@ async function withRetries({ provider, cfg }, model, system, prompt) {
       lastError = err;
       if (!RETRYABLE.includes(err.upstreamStatus) || attempt === MAX_TRIES) break;
       const delay = retryDelayMs() * 3 ** (attempt - 1);
-      console.warn(`${provider.label} busy (${err.upstreamStatus}) on ${model}, retrying in ${delay} ms (try ${attempt + 1} of ${MAX_TRIES})`);
+      logger.warn('ai-provider', `${provider.label} busy; retrying request.`, { status: err.upstreamStatus, model, delayMs: delay, nextAttempt: attempt + 1, maxAttempts: MAX_TRIES });
       await sleep(delay);
     }
   }
@@ -80,7 +86,7 @@ export async function callAI({ choice, system, prompt }) {
   } catch (err) {
     const { provider, cfg, model } = picked;
     if (cfg.fallbackModel && cfg.fallbackModel !== model && RETRYABLE.includes(err.upstreamStatus)) {
-      console.warn(`${model} is still busy, trying fallback model ${cfg.fallbackModel}`);
+      logger.warn('ai-provider', 'Primary model remains busy; trying configured fallback.', { provider: provider.id, primaryModel: model, fallbackModel: cfg.fallbackModel });
       return await provider.generate(cfg, cfg.fallbackModel, system, prompt);
     }
     throw err;
@@ -90,9 +96,14 @@ export async function callAI({ choice, system, prompt }) {
 /* ---------- What the browser needs ---------- */
 
 export function aiStatus() {
+  const enabled = apiEnabled();
   const def = defaultProvider();
   return {
+    apiEnabled: enabled,
     ai: Boolean(def),
+    // Backward-compatible label for older UI/tests, while defaultProvider remains the stable id.
+    provider: def ? def.label : null,
+    model: def ? def.config().model : null,
     defaultProvider: def ? def.id : null,
     providers: Object.values(PROVIDERS).map((p) => {
       const cfg = p.config();
@@ -115,14 +126,18 @@ export async function modelsFor(providerId) {
 
   let names = [];
   let live = false;
+  let providerError = '';
+  let providerErrorStatus = null;
   try {
     names = await provider.listModels(cfg);
     live = names.length > 0;
   } catch (err) {
-    console.warn(`Could not list ${provider.label} models: ${err.message}`);
+    providerError = err.message || `${provider.label} model discovery failed.`;
+    providerErrorStatus = err.status || err.upstreamStatus || null;
+    logger.warn('ai-provider', 'Provider model discovery failed; using suggestions and exposing the error state.', { provider: provider.id, status: providerErrorStatus, message: providerError });
   }
   const unique = [...new Set([cfg.model, ...cfg.suggested, ...names.sort().reverse()])];
-  const entry = { at: Date.now(), models: unique, live, defaultModel: cfg.model };
+  const entry = { at: Date.now(), models: unique, live, defaultModel: cfg.model, error: providerError, errorStatus: providerErrorStatus };
   modelCache.set(providerId, entry);
   return entry;
 }

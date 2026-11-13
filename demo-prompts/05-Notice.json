@@ -1,0 +1,8 @@
+﻿{
+    "input":  {
+                  "description":  "Create an accessible notice component with message text and a type dropdown for Information, Success, Warning or Error. Render the correct semantic role and style for the selected type. Component group: special-components. Clientlib category: AEMGeeks.components.notice.",
+                  "name":  "Demo Notice",
+                  "cms":  "aem"
+              },
+    "workflow":  "create"
+}
