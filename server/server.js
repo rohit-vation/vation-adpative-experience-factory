@@ -68,6 +68,13 @@ function sendJson(res, status, body) {
 }
 
 async function readJson(req) {
+  // On Vercel the platform has already read and parsed the body
+  if (req.body !== undefined && req.body !== null) {
+    const body = typeof req.body === 'string' ? req.body : JSON.stringify(req.body);
+    if (body.length > MAX_BODY_BYTES) throw new AiError('That request is too large.', 413);
+    try { return typeof req.body === 'string' ? JSON.parse(req.body) : req.body; } catch (err) { throw new AiError('The request was not valid JSON.', 400); }
+  }
+
   let size = 0;
   const chunks = [];
   for await (const chunk of req) {
@@ -140,7 +147,8 @@ async function generate(workflow, input, choice) {
 
 /* ---------- Routes ---------- */
 
-async function handleApi(req, res, path) {
+/** Answers one /api/* request. Used by the local server below and by the Vercel functions in /api. */
+export async function handleApi(req, res, path) {
   try {
     if (path === '/api/status' && req.method === 'GET') {
       return sendJson(res, 200, aiStatus());
@@ -152,7 +160,7 @@ async function handleApi(req, res, path) {
     }
 
     if (path === '/api/generate' && req.method === 'POST') {
-      if (rateLimited(req.socket.remoteAddress || 'unknown')) {
+      if (rateLimited(String(req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket?.remoteAddress || 'unknown')) {
         throw new AiError('Too many requests. Wait a few minutes and try again.', 429);
       }
       const { workflow, input, ai } = await readJson(req);
@@ -199,7 +207,6 @@ export function createServer() {
   });
 }
 
-/*
 // Start only when run directly (so tests can import this file)
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   createServer().listen(PORT, () => {
@@ -211,24 +218,3 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
       : 'AI: off (no API key in .env), running in demo mode');
   });
 }
-*/
-
-const server = createServer();
-
-// Start locally only when run directly (so local 'npm start' and tests still work)
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  server.listen(PORT, () => {
-    const status = aiStatus();
-    console.log(`Adaptive Experience Factory: http://localhost:${PORT}`);
-    const ready = status.providers.filter((p) => p.configured);
-    console.log(ready.length
-      ? `AI ready: ${ready.map((p) => `${p.label} (${p.defaultModel})`).join(', ')}. Default: ${status.defaultProvider}`
-      : 'AI: off (no API key in .env), running in demo mode');
-  });
-}
-
-// Export the server listener request handler for Vercel's serverless environment
-export default (req, res) => {
-  server.emit('request', req, res);
-};
-
