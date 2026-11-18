@@ -6,7 +6,6 @@
  */
 
 import { WORKFLOWS, ORDER } from '../src/workflows/index.js';
-import { CMS_IDS } from '../src/config.js';
 import { defaultInput } from './sample-inputs.js';
 
 let failures = 0;
@@ -43,30 +42,6 @@ for (const id of ORDER) {
   }
   const bad = problems(html);
   check(`${id}: no broken output`, bad.length === 0, bad.join(', '));
-}
-
-// Migrate has a different example page for every target CMS
-for (const target of CMS_IDS) {
-  const w = WORKFLOWS.migrate;
-  const html = w.render(w.demo({ url: 'northwind.example', target }), { target });
-  check(`migrate to ${target}: no broken output`, problems(html).length === 0, problems(html).join(', '));
-}
-
-// Map works for every source and target pair
-{
-  let pairs = 0;
-  const broken = [];
-  for (const source of CMS_IDS) {
-    for (const target of CMS_IDS) {
-      if (source === target) continue;
-      const w = WORKFLOWS.map;
-      const input = { source, target, components: 'Hero Banner, Teaser Card', requirement: 'x' };
-      pairs++;
-      const bad = problems(w.render(w.demo(input), input));
-      if (bad.length) broken.push(`${source}->${target}: ${bad.join(', ')}`);
-    }
-  }
-  check(`map: all ${pairs} source/target pairs render cleanly`, broken.length === 0, broken.join('; '));
 }
 
 // Audit: unticking a check removes its findings

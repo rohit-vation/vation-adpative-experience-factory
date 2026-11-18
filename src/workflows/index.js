@@ -27,11 +27,9 @@
  */
 
 import create from './create/index.js';
-import map from './map/index.js';
 import audit from './audit/index.js';
-import migrate from './migrate/index.js';
 
-export const WORKFLOWS = { create, map, audit, migrate };
+export const WORKFLOWS = { create, audit };
 
 /** Order of the cards on the home dashboard. */
-export const ORDER = ['create', 'map', 'audit', 'migrate'];
+export const ORDER = ['create', 'audit'];

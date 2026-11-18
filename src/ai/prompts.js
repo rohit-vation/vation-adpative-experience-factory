@@ -29,29 +29,6 @@ Return this JSON shape:
 Rules: the four implementations must expose equivalent fields. Use design tokens (CSS custom properties) instead of fixed colors.
 Include dialog or content model, rendering code and styles for every CMS.`,
 
-  map: (i) => `Map components from one CMS to another.
-Source CMS: ${CMS[i.source].label}
-Target CMS: ${CMS[i.target].label}
-Components: ${items(i.components).join(', ')}
-Requirement: ${i.requirement}
-
-For each component write the source implementation and the equivalent target implementation.
-Return this JSON shape:
-{
-  "summary": { "components": number, "fields": number, "auto": number (percent), "review": number },
-  "requirement": string,
-  "source": "${i.source}", "target": "${i.target}",
-  "components": [{
-    "name": string,
-    "status": "Ready to migrate" | "Review suggested",
-    "mapping": [{ "field": string, "source": string, "target": string, "transform": string, "confidence": "high" | "medium" | "low" }],
-    "sourceFiles": [${FILE_SHAPE}],
-    "targetFiles": [${FILE_SHAPE}]
-  }],
-  "notes": [string]
-}
-Rules: you only have the component names, not their real code, so write plausible source implementations. Never drop a field silently. Mark a field "medium" when content must be converted and "low" when a person must decide.`,
-
   audit: (i) => `Audit a ${i.mode === 'url' ? 'website' : 'component'} for quality.
 Subject: ${i.target}
 Checks to run: ${i.checks.join(', ')}  (a11y, seo, perf, ds, content)
@@ -67,19 +44,4 @@ Return this JSON shape:
 }
 Rules: you cannot open the URL or measure anything. Give estimates based on typical issues for this kind of site, and say "Estimated" in each metric "target". Cite the specific rule for every finding. Leave "metrics" empty unless perf is selected. Return an empty "findings" list for checks that were not requested.`,
 
-  migrate: (i) => `Plan a content migration.
-Source site: ${i.url}
-Target CMS: ${CMS[i.target].label}
-
-Return this JSON shape:
-{
-  "site": { "host": string, "pages": number, "assets": number },
-  "target": "${i.target}",
-  "stats": [{ "label": string, "value": string }],
-  "templates": [{ "name": string, "pages": number, "components": string }],
-  "mapping": [{ "source": string (CSS selector), "target": string (target component), "fields": string, "confidence": "high" | "medium" | "low" }],
-  "output": ${FILE_SHAPE},
-  "review": [{ "severity": "critical" | "serious" | "moderate" | "minor", "title": string, "detail": string }]
-}
-Rules: you cannot crawl the site, so counts are estimates. "output" is one converted example page in the native import format of the target CMS. "confidence" in each mapping is "high", "medium" or "low".`
 };

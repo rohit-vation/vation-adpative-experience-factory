@@ -22,10 +22,7 @@ import { defaultInput } from './sample-inputs.js';
 
 const FIRST_LINES = {
   'Create a reusable component.': 'create',
-  'Map components from one CMS to another.': 'map',
-  'Audit a': 'audit',
-  'Plan a content migration.': 'migrate',
-  'Prepare personalization blocks.': 'personalize'
+  'Audit a': 'audit'
 };
 
 function workflowOf(prompt) {

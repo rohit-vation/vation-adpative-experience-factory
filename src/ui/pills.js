@@ -17,17 +17,6 @@ export function severityPill(severity) {
   return `<span class="pill ${style}">${esc(label)}</span>`;
 }
 
-const CONFIDENCE = {
-  high:   { style: 'good', label: 'Automatic' },
-  medium: { style: 'warn', label: 'Review' },
-  low:    { style: 'bad',  label: 'Manual' }
-};
-
-/** How sure the mapping is: Automatic, Review or Manual. */
-export function confidencePill(confidence) {
-  const { style, label } = CONFIDENCE[confidence];
-  return `<span class="pill ${style}">${label}</span>`;
-}
 
 /** Says where a result came from: the hardcoded demo or the AI. */
 export function sourcePill(data) {
