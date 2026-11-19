@@ -31,7 +31,6 @@ const num = (x, min, max, fallback) => {
 const need = (cond, message) => { if (!cond) throw new Error('Invalid AI response: ' + message); };
 
 const SEVERITIES = ['critical', 'serious', 'moderate', 'minor'];
-const CONFIDENCE = ['high', 'medium', 'low'];
 
 /** { name, lang, code } with all three as text. Returns null if there is no code. */
 function cleanFile(f) {
@@ -74,47 +73,6 @@ const VALIDATORS = {
     };
   },
 
-  map(d, input) {
-    need(isObj(d), 'not an object');
-    const components = arr(d.components).filter(isObj).map((c) => {
-      const mapping = arr(c.mapping).filter(isObj).map((m) => ({
-        field: str(m.field),
-        source: str(m.source),
-        target: str(m.target),
-        transform: str(m.transform),
-        confidence: oneOf(m.confidence, CONFIDENCE, 'medium')
-      }));
-      const needsReview = mapping.some((m) => m.confidence !== 'high');
-      return {
-        name: str(c.name, 'Component'),
-        status: needsReview ? 'Review suggested' : 'Ready to migrate',
-        mapping,
-        sourceFiles: cleanFiles(c.sourceFiles),
-        targetFiles: cleanFiles(c.targetFiles)
-      };
-    });
-    need(components.length > 0, 'no components');
-    need(components.every((c) => c.targetFiles.length > 0), 'a component has no target files');
-
-    // Counts come from the data, not from the model
-    const fields = components.reduce((n, c) => n + c.mapping.length, 0);
-    const auto = components.reduce((n, c) => n + c.mapping.filter((m) => m.confidence === 'high').length, 0);
-
-    return {
-      summary: {
-        components: components.length,
-        fields,
-        auto: fields ? Math.round((100 * auto) / fields) : 0,
-        review: fields - auto
-      },
-      requirement: input.requirement,
-      source: input.source,
-      target: input.target,
-      components,
-      notes: arr(d.notes).map((x) => str(x))
-    };
-  },
-
   audit(d, input) {
     need(isObj(d), 'not an object');
     const selected = input.checks;
@@ -152,38 +110,6 @@ const VALIDATORS = {
     return { mode: input.mode, subject: str(d.subject, input.target), categories, metrics, findings };
   },
 
-  migrate(d, input) {
-    need(isObj(d), 'not an object');
-    const output = cleanFile(d.output);
-    need(output, 'missing example page');
-
-    return {
-      site: {
-        host: str(d.site?.host),
-        pages: Math.round(num(d.site?.pages, 0, 1e7, 0)),
-        assets: Math.round(num(d.site?.assets, 0, 1e7, 0))
-      },
-      target: input.target,
-      stats: arr(d.stats).filter(isObj).map((s) => ({ label: str(s.label), value: str(s.value) })),
-      templates: arr(d.templates).filter(isObj).map((t) => ({
-        name: str(t.name),
-        pages: Math.round(num(t.pages, 0, 1e7, 0)),
-        components: str(t.components)
-      })),
-      mapping: arr(d.mapping).filter(isObj).map((m) => ({
-        source: str(m.source),
-        target: str(m.target),
-        fields: str(m.fields),
-        confidence: oneOf(m.confidence, CONFIDENCE, 'medium')
-      })),
-      output,
-      review: arr(d.review).filter(isObj).map((r) => ({
-        severity: oneOf(r.severity, SEVERITIES, 'moderate'),
-        title: str(r.title),
-        detail: str(r.detail)
-      }))
-    };
-  }
 };
 
 export function validate(workflowId, data, input) {

@@ -49,10 +49,7 @@ The key stays in `.env` on the server. It is never sent to the browser, and `.en
 | Workflow | Quality of live result |
 | --- | --- |
 | Create component | Real. Generated from your description. |
-| Prepare personalization blocks | Real. Check the metadata against the import format of your personalization system. |
-| Map components | Partly. The model only gets component names, so the source code is a plausible example. Results show a notice. |
 | Audit experience | Estimates only. The model cannot open the site or measure anything. Results show a notice. |
-| Migrate content | Estimates only. The model cannot crawl the site. Results show a notice. |
 
 Making Audit and Migrate real needs tools that fetch and measure (Lighthouse, axe-core, a crawler). Those would go in `server/` and their results would be passed into the prompt.
 
@@ -61,10 +58,7 @@ Making Audit and Migrate real needs tools that fetch and measure (Lighthouse, ax
 | Workflow | You enter | You get |
 | --- | --- | --- |
 | Create component | name, CMS, description | design preview, content model and code for all four CMS platforms |
-| Map components | source CMS, target CMS, components, requirement | field mapping, source code and mapped target code |
 | Audit experience | URL or component, checks to run | scores, Core Web Vitals, findings with fixes |
-| Migrate content | site URL, target CMS | inventory, component mapping, converted example page, review list |
-| Prepare personalization blocks | component, audiences, goal, system | variants, audience rules, import metadata |
 
 ## Folder map
 
@@ -102,7 +96,7 @@ src/
 
   workflows/                  one folder per workflow
     index.js                  registry and card order
-    create/ map/ audit/ migrate/ personalize/
+    create/ audit/
       index.js                definition: texts, form, validation
       demo.js                 hardcoded result
       render.js               result to HTML

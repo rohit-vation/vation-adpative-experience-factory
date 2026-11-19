@@ -32,9 +32,7 @@ const PORT = process.env.PORT || 3000;
 
 /** Shown above results the model could only estimate. */
 const NOTICES = {
-  map: 'The model only has the component names, not your real source code. The source implementation is a plausible example, not read from your repository.',
-  audit: 'The model cannot open websites or run tests. Scores, measurements and findings are estimates, not measurements.',
-  migrate: 'The model cannot crawl the site. Page counts, templates and mappings are estimates, not a real inventory.'
+  audit: 'The model cannot open websites or run tests. Scores, measurements and findings are estimates, not measurements.'
 };
 
 /* ---------- Limits ---------- */

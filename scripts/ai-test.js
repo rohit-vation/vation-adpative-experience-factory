@@ -63,7 +63,7 @@ for (const id of ORDER) {
 }
 
 // 4. Notices on estimated workflows
-for (const id of ['map', 'audit', 'migrate']) {
+for (const id of [ 'audit']) {
   reset('ok');
   const { body } = await post(id, defaultInput(id));
   check(`${id}: carries an "estimate" notice`, typeof body.data._notice === 'string');
